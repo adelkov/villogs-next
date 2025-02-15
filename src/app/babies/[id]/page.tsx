@@ -98,15 +98,15 @@ export default async function BabyDashboard({ params }: { params: { id: string }
   })
 
   return (
-    <div className="p-8">
+    <div className="p-8 bg-gray-950">
       <header className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">{baby.name}</h1>
-        <p className="text-gray-500">Today's Activities</p>
+        <h1 className="text-3xl font-bold mb-2 text-gray-100">{baby.name}</h1>
+        <p className="text-gray-400">Today&apos;s Activities</p>
       </header>
 
       <div className="grid gap-6">
         {/* Debug output */}
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-gray-400">
           Found {baby.breast_feed_logs.length} feeds, {baby.sleep_logs.length} sleep logs, and {baby.diaper_change_logs.length} diaper changes
         </div>
 
@@ -114,7 +114,7 @@ export default async function BabyDashboard({ params }: { params: { id: string }
         {baby.breast_feed_logs.map(feed => (
           <div 
             key={feed.id}
-            className="bg-pink-50 dark:bg-pink-900/20 border border-pink-200 dark:border-pink-800 rounded-lg p-4 flex items-center"
+            className="bg-gray-900 border border-pink-900 rounded-lg p-4 flex items-center"
           >
             <div className="bg-pink-100 dark:bg-pink-900/40 p-3 rounded-full mr-4">
               <IconMilk className="w-6 h-6 text-pink-500 dark:text-pink-300" />
@@ -136,19 +136,22 @@ export default async function BabyDashboard({ params }: { params: { id: string }
         {baby.sleep_logs.map(sleep => (
           <div 
             key={sleep.id}
-            className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-200 dark:border-indigo-800 rounded-lg p-4 flex items-center"
+            className="bg-gray-900 border border-violet-800 rounded-lg p-4 flex items-center"
           >
-            <div className="bg-indigo-100 dark:bg-indigo-900/40 p-3 rounded-full mr-4">
-              <IconMoon className="w-6 h-6 text-indigo-500 dark:text-indigo-300" />
+            <div className="bg-violet-900/40 p-3 rounded-full mr-4">
+              <IconMoon className="w-6 h-6 text-violet-200" />
             </div>
             <div className="flex-1">
-              <h3 className="font-medium text-indigo-900 dark:text-indigo-100">Sleep Time</h3>
-              <p className="text-sm text-indigo-600 dark:text-indigo-300">
+              <h3 className="font-medium text-violet-100">Sleep Time</h3>
+              <p className="text-sm text-violet-200">
                 Started at {formatTime(sleep.started_at)}
-                {sleep.ended_at ? ` - Ended at ${formatTime(sleep.ended_at)}` : ' (Still sleeping)'}
+                {sleep.ended_at 
+                  ? ` - Ended at ${formatTime(sleep.ended_at)}` 
+                  : ' (Still sleeping)'
+                }
               </p>
             </div>
-            <IconClock className="w-5 h-5 text-indigo-400 dark:text-indigo-300" />
+            <IconClock className="w-5 h-5 text-violet-200" />
           </div>
         ))}
 
@@ -156,7 +159,7 @@ export default async function BabyDashboard({ params }: { params: { id: string }
         {baby.diaper_change_logs.map(change => (
           <div 
             key={change.id}
-            className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 flex items-center"
+            className="bg-gray-900 border border-green-900 rounded-lg p-4 flex items-center"
           >
             <div className="bg-green-100 dark:bg-green-900/40 p-3 rounded-full mr-4">
               <IconDroplet className="w-6 h-6 text-green-500 dark:text-green-300" />
@@ -181,6 +184,7 @@ export default async function BabyDashboard({ params }: { params: { id: string }
             No activities recorded today
           </div>
         )}
+
       </div>
     </div>
   )
