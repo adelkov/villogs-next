@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 // Add this interface at the top of the file
 interface Baby {
@@ -44,10 +45,15 @@ export default async function Home() {
           ) : (
             <ul className="space-y-4">
               {babies.map((baby: Baby) => (
-                <li key={baby.id} className="border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-900">
-                  <h3 className="font-semibold">{baby.name}</h3>
-                  <p className="text-sm text-gray-500">Born: {baby.date_of_birth}</p>
-                </li>
+                <Link 
+                  href={`/babies/${baby.id}`} 
+                  key={baby.id}
+                >
+                  <li className="border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors cursor-pointer">
+                    <h3 className="font-semibold">{baby.name}</h3>
+                    <p className="text-sm text-gray-500">Born: {baby.date_of_birth}</p>
+                  </li>
+                </Link>
               ))}
             </ul>
           )}
