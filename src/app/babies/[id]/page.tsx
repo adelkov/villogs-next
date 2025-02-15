@@ -7,6 +7,7 @@ import {
   IconClock 
 } from '@tabler/icons-react'
 import { format, parseISO } from 'date-fns'
+import { use } from 'react'
 
 async function getBaby(id: string) {
   const today = new Date()
@@ -84,8 +85,13 @@ function formatTime(dateStr: string) {
   return format(parseISO(dateStr), 'HH:mm')
 }
 
-export default async function BabyDashboard({ params }: { params: { id: string } }) {
-  const baby = await getBaby(params.id)
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export default function BabyDashboard({ params }: PageProps) {
+  const { id } = use(params)
+  const baby = use(getBaby(id))
 
   // Debug log
   console.log('Rendering data:', {
@@ -104,10 +110,10 @@ export default async function BabyDashboard({ params }: { params: { id: string }
         <p className="text-gray-400">Today&apos;s Activities</p>
       </header>
 
-      {/* Action Buttons */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      {/* Action Buttons - now always horizontal */}
+      <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
         {/* Sleep Action */}
-        <div className="bg-gray-900 border border-violet-800 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors">
+        <div className="bg-gray-900 border border-violet-800 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors flex-1 min-w-[120px]">
           <div className="bg-violet-900/40 p-3 rounded-full mb-2">
             <IconMoon className="w-6 h-6 text-violet-200" />
           </div>
@@ -115,7 +121,7 @@ export default async function BabyDashboard({ params }: { params: { id: string }
         </div>
 
         {/* Breastfeeding Action */}
-        <div className="bg-gray-900 border border-pink-900 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors">
+        <div className="bg-gray-900 border border-pink-900 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors flex-1 min-w-[120px]">
           <div className="bg-pink-900/40 p-3 rounded-full mb-2">
             <IconMilk className="w-6 h-6 text-pink-300" />
           </div>
@@ -123,7 +129,7 @@ export default async function BabyDashboard({ params }: { params: { id: string }
         </div>
 
         {/* Diaper Change Action */}
-        <div className="bg-gray-900 border border-green-900 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors">
+        <div className="bg-gray-900 border border-green-900 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors flex-1 min-w-[120px]">
           <div className="bg-green-900/40 p-3 rounded-full mb-2">
             <IconDroplet className="w-6 h-6 text-green-300" />
           </div>
