@@ -1,8 +1,9 @@
 'use server'
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { withAuth } from '@/lib/auth'
 
-export async function toggleSleep(babyId: string) {
+export const toggleSleep = withAuth(async (session, babyId: string) => {
   const ongoingSleep = await prisma.sleep_logs.findFirst({
     where: {
       baby_id: BigInt(babyId),
@@ -27,9 +28,9 @@ export async function toggleSleep(babyId: string) {
   }
 
   revalidatePath(`/babies/${babyId}`)
-}
+})
 
-export async function toggleFeeding(babyId: string, side: 'left' | 'right' = 'left') {
+export const toggleFeeding = withAuth(async (session, babyId: string, side: 'left' | 'right' = 'left') => {
   const ongoingFeed = await prisma.breast_feed_logs.findFirst({
     where: {
       baby_id: BigInt(babyId),
@@ -55,9 +56,9 @@ export async function toggleFeeding(babyId: string, side: 'left' | 'right' = 'le
   }
 
   revalidatePath(`/babies/${babyId}`)
-}
+})
 
-export async function logDiaper(babyId: string, type: 'pee' | 'poop' | 'both' | 'empty') {
+export const logDiaper = withAuth(async (session, babyId: string, type: 'pee' | 'poop' | 'both' | 'empty') => {
   await prisma.diaper_change_logs.create({
     data: {
       baby_id: BigInt(babyId),
@@ -67,7 +68,7 @@ export async function logDiaper(babyId: string, type: 'pee' | 'poop' | 'both' | 
   })
   
   revalidatePath(`/babies/${babyId}`)
-}
+})
 
 type LogType = 'sleep' | 'feed' | 'diaper'
 
@@ -78,7 +79,7 @@ interface EditLogData {
   type?: string
 }
 
-export async function deleteLog(id: string, type: LogType) {
+export const deleteLog = withAuth(async (session, id: string, type: LogType) => {
   const table = {
     sleep: 'sleep_logs',
     feed: 'breast_feed_logs',
@@ -90,9 +91,9 @@ export async function deleteLog(id: string, type: LogType) {
   })
 
   revalidatePath('/babies/[id]')
-}
+})
 
-export async function editLog(id: string, type: LogType, data: EditLogData) {
+export const editLog = withAuth(async (session, id: string, type: LogType, data: EditLogData) => {
   const table = {
     sleep: 'sleep_logs',
     feed: 'breast_feed_logs',
@@ -110,4 +111,4 @@ export async function editLog(id: string, type: LogType, data: EditLogData) {
   })
 
   revalidatePath('/babies/[id]')
-} 
+}) 
