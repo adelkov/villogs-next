@@ -19,7 +19,7 @@ export function getElapsedTime(fromTime: string): string {
 
 export function getStartOfDay(date: Date = new Date()) {
   // Get user's timezone
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const timeZone = 'UTC'
   
   // Convert to user's timezone and get start of day
   const zonedDate = toZonedTime(date, timeZone)
