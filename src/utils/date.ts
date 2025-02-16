@@ -1,5 +1,6 @@
-import { format, parseISO, startOfDay } from 'date-fns'
+import { endOfDay, format, formatISO, parseISO, startOfDay } from 'date-fns'
 import { toZonedTime } from 'date-fns-tz'
+
 
 export function formatTime(dateStr: string) {
   return format(parseISO(dateStr), 'HH:mm')
@@ -26,6 +27,25 @@ export function getStartOfDay(date: Date = new Date()) {
   const zonedDate = toZonedTime(date, timeZone)
   return startOfDay(zonedDate)
 }
+
+
+export function getStartOfBudapestDayUTC(date = new Date()) {
+  // Budapest timezone offset in minutes:
+  // - CET (Winter) = UTC+1 → offset = -60 minutes
+  // - CEST (Summer) = UTC+2 → offset = -120 minutes
+  const budapestOffset = new Date().toLocaleString("en-US", { timeZone: "Europe/Budapest", hour12: false });
+  const currentOffset = new Date(budapestOffset).getTimezoneOffset(); // in minutes
+
+  // Get the start of the given day in Budapest time
+  const budapestMidnight = new Date(date);
+  budapestMidnight.setUTCHours(0, 0, 0, 0); // Set to 00:00:00 UTC
+
+  // Adjust for Budapest's timezone (convert from local to UTC)
+  budapestMidnight.setMinutes(budapestMidnight.getMinutes() + currentOffset);
+
+  return budapestMidnight.toISOString();
+}
+
 
 export function getElapsedTimeInMinSec(dateStr: string): string {
   const start = new Date(dateStr)

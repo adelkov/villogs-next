@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { getStartOfDay } from '@/utils/date'
+import { getBudapestDayRange, getStartOfBudapestDayUTC } from '@/utils/date'
 import { createTimeline } from '@/utils/timeline'
 import type { breast_feed_logs, diaper_change_logs, sleep_logs } from '@prisma/client'
 import type { Metadata } from 'next'
@@ -22,17 +22,17 @@ interface BabyWithLogs {
 }
 
 async function getBaby(id: string): Promise<BabyWithLogs> {
-  const today = getStartOfDay()
+  const startOfDay = getStartOfBudapestDayUTC()
   const baby = await prisma.babies.findUnique({
     where: {
       id: BigInt(id)
     },
-    include: {
+    include: {  
       breast_feed_logs: {
         where: {
           OR: [
-            { started_at: { gte: today.toISOString() } },
-            { ended_at: { gte: today.toISOString() } },
+            { started_at: { gte: startOfDay } },
+            { ended_at: { gte: startOfDay } },
             { ended_at: null }
           ]
         },
@@ -41,8 +41,8 @@ async function getBaby(id: string): Promise<BabyWithLogs> {
       sleep_logs: {
         where: {
           OR: [
-            { started_at: { gte: today.toISOString() } },
-            { ended_at: { gte: today.toISOString() } },
+                { started_at: { gte: startOfDay } },
+            { ended_at: { gte: startOfDay } },
             { ended_at: null }
           ]
         },
@@ -50,7 +50,7 @@ async function getBaby(id: string): Promise<BabyWithLogs> {
       },
       diaper_change_logs: {
         where: {
-          started_at: { gte: today.toISOString() }
+          started_at: { gte: startOfDay }
         },
         orderBy: { started_at: 'desc' }
       }

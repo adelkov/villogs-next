@@ -1,19 +1,22 @@
 import { IconMoon } from '@tabler/icons-react'
 import { prisma } from '@/lib/prisma'
 import SleepCalendar from './components/SleepCalendar'
-import { startOfMonth, eachDayOfInterval, endOfMonth } from 'date-fns'
+import { startOfMonth, endOfMonth, eachDayOfInterval, parseISO } from 'date-fns'
 import { calculateDailySleep } from '@/utils/sleep'
+import { getStartOfBudapestDayUTC } from '@/utils/date'
 
 async function getMonthlySleepLogs(babyId: string) {
   const today = new Date()
   const monthStart = startOfMonth(today)
+  // Get the UTC timestamp for the start of the month in Budapest timezone
+  const monthStartUTC = getStartOfBudapestDayUTC(monthStart)
 
   const logs = await prisma.sleep_logs.findMany({
     where: {
       baby_id: BigInt(babyId),
       OR: [
-        { started_at: { gte: monthStart.toISOString() } },
-        { ended_at: { gte: monthStart.toISOString() } }
+        { started_at: { gte: monthStartUTC } },
+        { ended_at: { gte: monthStartUTC } }
       ]
     },
     orderBy: { started_at: 'desc' }
@@ -38,15 +41,27 @@ export default async function SleepStatsPage({ params }: { params: Promise<{ id:
   const sleepLogs = await getMonthlySleepLogs(id)
   const currentDate = new Date()
   
-  // Calculate sleep data for each day of the month
   const monthStart = startOfMonth(currentDate)
   const monthEnd = endOfMonth(currentDate)
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd })
   
   const dailySleepData: DailySleepData[] = daysInMonth.map(date => {
-    const sleepData = calculateDailySleep(sleepLogs, date)
+    const dayStart = getStartOfBudapestDayUTC(date)
+    const nextDayStart = getStartOfBudapestDayUTC(new Date(new Date(date).setDate(date.getDate() + 1)))
+    
+    const dayLogs = sleepLogs.filter(log => {
+      const startTime = parseISO(log.started_at)
+      const endTime = log.ended_at ? parseISO(log.ended_at) : new Date()
+      
+      return (startTime >= parseISO(dayStart) && startTime < parseISO(nextDayStart)) ||
+             (endTime >= parseISO(dayStart) && endTime < parseISO(nextDayStart)) ||
+             (startTime <= parseISO(dayStart) && endTime >= parseISO(nextDayStart))
+    })
+
+    const sleepData = calculateDailySleep(dayLogs)
+
     return {
-      date,
+      date: new Date(date), // Create a new date to avoid mutations
       ...sleepData.formatted,
       totalSeconds: sleepData.totalSeconds
     }
