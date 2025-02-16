@@ -45,7 +45,7 @@ function StatusBar({
 
   useEffect(() => {
     const updateTimes = () => {
-      // Update feeding time if active - update every second for feeding
+      // Update feeding time if active
       if (activeFeeding) {
         setFeedingTime(getElapsedTimeInMinSec(activeFeeding.started_at))
       }
@@ -65,9 +65,10 @@ function StatusBar({
       }
     }
 
-    updateTimes()
-    // Update more frequently (every second) when feeding is active
-    const interval = setInterval(updateTimes, activeFeeding ? 1000 : 60000)
+    updateTimes() // Initial update
+    
+    // Update every second for both feeding and sleep/awake times
+    const interval = setInterval(updateTimes, 1000)
     return () => clearInterval(interval)
   }, [activeSleep, lastSleep, activeFeeding])
 
@@ -91,10 +92,10 @@ function StatusBar({
             {activeSleep ? 'Baby is sleeping' : 'Baby is awake'}
           </span>
         </div>
-        <div className="text-sm text-gray-300">
+        <div className="text-sm text-gray-300 font-mono">
           {activeSleep 
-            ? `Sleeping for ${elapsedTime}`
-            : `Awake for ${awakeTime}`
+            ? `for ${elapsedTime}`
+            : `for ${awakeTime}`
           }
         </div>
       </div>

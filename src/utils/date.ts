@@ -4,8 +4,16 @@ export function formatTime(dateStr: string) {
   return format(parseISO(dateStr), 'HH:mm')
 }
 
-export function getElapsedTime(dateStr: string) {
-  return formatDistanceToNow(new Date(dateStr))
+export function getElapsedTime(fromTime: string): string {
+  const start = new Date(fromTime)
+  const now = new Date()
+  const diffMs = now.getTime() - start.getTime()
+  
+  const hours = Math.floor(diffMs / (1000 * 60 * 60))
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
+  const seconds = Math.floor((diffMs % (1000 * 60)) / 1000)
+  
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
 export function getStartOfDay() {
@@ -22,5 +30,5 @@ export function getElapsedTimeInMinSec(dateStr: string): string {
   const minutes = Math.floor(diffInSeconds / 60)
   const seconds = diffInSeconds % 60
   
-  return `${minutes}:${seconds.toString().padStart(2, '0')}`
+  return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 } 
