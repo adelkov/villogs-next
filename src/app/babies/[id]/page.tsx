@@ -7,8 +7,35 @@ import { Suspense } from 'react'
 import ActionBar from './components/ActionBar'
 import ActionBarSkeleton from './components/ActionBarSkeleton'
 import TimelineWrapper from './components/TimelineWrapper'
+import type { Prisma } from '@prisma/client'
 
-async function getBaby(id: string) {
+// Define the return type of getBaby using Prisma's inferred types
+type BabyWithLogs = Prisma.babiesGetPayload<{
+  include: {
+    breast_feed_logs: true
+    sleep_logs: true
+    diaper_change_logs: true
+  }
+}>
+
+// Define the type after BigInt conversion
+type BabyWithStringIds = Omit<BabyWithLogs, 'id' | 'breast_feed_logs' | 'sleep_logs' | 'diaper_change_logs'> & {
+  id: string
+  breast_feed_logs: Array<Omit<BabyWithLogs['breast_feed_logs'][number], 'id' | 'baby_id'> & {
+    id: string
+    baby_id: string
+  }>
+  sleep_logs: Array<Omit<BabyWithLogs['sleep_logs'][number], 'id' | 'baby_id'> & {
+    id: string
+    baby_id: string
+  }>
+  diaper_change_logs: Array<Omit<BabyWithLogs['diaper_change_logs'][number], 'id' | 'baby_id'> & {
+    id: string
+    baby_id: string
+  }>
+}
+
+async function getBaby(id: string): Promise<BabyWithStringIds> {
   const today = getStartOfDay()
 
   const baby = await prisma.babies.findUnique({
@@ -49,9 +76,8 @@ async function getBaby(id: string) {
     notFound()
   }
 
-  return convertBigIntsToStrings(baby)
+  return convertBigIntsToStrings(baby) as unknown as BabyWithStringIds
 }
-
 
 interface PageProps {
   params: { id: string }

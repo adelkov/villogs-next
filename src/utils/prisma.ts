@@ -5,21 +5,23 @@ export function convertBigIntsToStrings<T>(obj: T): T {
     return obj
   }
 
-  if (typeof obj !== 'object') {
-    if (obj instanceof Prisma.Decimal || obj instanceof BigInt) {
-      return String(obj) as unknown as T
-    }
-    return obj
+  if (typeof obj === 'bigint') {
+    return obj.toString() as unknown as T
   }
 
   if (Array.isArray(obj)) {
-    return obj.map(convertBigIntsToStrings) as unknown as T
+    return obj.map(item => convertBigIntsToStrings(item)) as unknown as T
   }
 
-  return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      convertBigIntsToStrings(value)
-    ])
-  ) as T
+  if (typeof obj === 'object') {
+    const converted: Record<string, any> = {}
+    
+    for (const [key, value] of Object.entries(obj)) {
+      converted[key] = convertBigIntsToStrings(value)
+    }
+
+    return converted as T
+  }
+
+  return obj
 } 
