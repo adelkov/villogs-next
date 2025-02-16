@@ -1,9 +1,9 @@
 'use client'
-import { IconMilk, IconClock, IconEdit, IconTrash } from '@tabler/icons-react'
-import { formatTime } from '@/utils/date'
+import { IconEdit, IconMilk } from '@tabler/icons-react'
+import { format } from 'date-fns'
 import { useState } from 'react'
 import EditFeedingDialog from '../dialogs/EditFeedingDialog'
-import { format } from 'date-fns'
+import DurationChip from '../DurationChip'
 
 interface FeedingLogProps {
   id: string
@@ -30,29 +30,37 @@ export default function FeedingLog({
   }
 
   return (
-    <div className="bg-pink-400/10 border border-pink-400/30 rounded-lg p-2 sm:p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="bg-pink-400/20 p-2 rounded-full">
-            <IconMilk className="w-5 h-5 text-pink-300" />
-          </div>
-          <div>
-            <div className="text-sm text-pink-300/80">
-              {format(new Date(startedAt), 'HH:mm')}
-              {endedAt && ` - ${format(new Date(endedAt), 'HH:mm')}`}
+    <>
+      <button 
+        onClick={() => setShowEditDialog(true)}
+        className="w-full text-left"
+      >
+        <div className="bg-pink-400/10 border border-pink-400/30 rounded-lg p-2 sm:p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-pink-400/20 p-2 rounded-full">
+                <IconMilk className="w-5 h-5 text-pink-300" />
+              </div>
+              <div>
+                <div className="text-sm text-pink-300/80">
+                  {format(new Date(startedAt), 'HH:mm')}
+                  {endedAt && ` - ${format(new Date(endedAt), 'HH:mm')}`}
+                </div>
+                <div className="text-pink-300">
+                  Feeding ({side} side)
+                </div>
+              </div>
             </div>
-            <div className="text-pink-300">
-              Feeding ({side} side)
-            </div>
+            {endedAt && (
+              <DurationChip 
+                startedAt={startedAt} 
+                endedAt={endedAt}
+                variant="pink"
+              />
+            )}
           </div>
         </div>
-        <button 
-          onClick={() => setShowEditDialog(true)} 
-          className="p-1.5 hover:bg-pink-400/20 rounded"
-        >
-          <IconEdit className="w-5 h-5 text-pink-300" />
-        </button>
-      </div>
+      </button>
 
       {showEditDialog && (
         <EditFeedingDialog
@@ -61,13 +69,10 @@ export default function FeedingLog({
           endedAt={endedAt}
           side={side}
           onSave={handleSave}
-          onDelete={(id) => {
-            onDelete(id)
-            setShowEditDialog(false)
-          }}
+          onDelete={onDelete}
           onCancel={() => setShowEditDialog(false)}
         />
       )}
-    </div>
+    </>
   )
 } 

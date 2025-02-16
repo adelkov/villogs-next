@@ -1,8 +1,9 @@
 'use client'
-import { useState } from 'react'
-import { IconMoon, IconClock, IconEdit } from '@tabler/icons-react'
 import { formatTime } from '@/utils/date'
+import { IconEdit, IconMoon } from '@tabler/icons-react'
+import { useState } from 'react'
 import EditSleepDialog from '../dialogs/EditSleepDialog'
+import DurationChip from '../DurationChip'
 
 interface SleepLogProps {
   id: string
@@ -27,29 +28,37 @@ export default function SleepLog({
   }
 
   return (
-    <div className="bg-sky-900/20 border border-sky-800/50 rounded-lg p-2 sm:p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="bg-sky-900/40 p-2 rounded-full">
-            <IconMoon className="w-5 h-5 text-sky-200" />
-          </div>
-          <div>
-            <div className="text-sm text-sky-200/80">
-              {formatTime(startedAt)}
-              {endedAt && ` - ${formatTime(endedAt)}`}
+    <>
+      <button 
+        onClick={() => setShowEditDialog(true)}
+        className="w-full text-left"
+      >
+        <div className="bg-sky-900/20 border border-sky-800/50 rounded-lg p-2 sm:p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="bg-sky-900/40 p-2 rounded-full">
+                <IconMoon className="w-5 h-5 text-sky-200" />
+              </div>
+              <div>
+                <div className="text-sm text-sky-200/80">
+                  {formatTime(startedAt)}
+                  {endedAt && ` - ${formatTime(endedAt)}`}
+                </div>
+                <div className="text-sky-200">
+                  Sleep
+                </div>
+              </div>
             </div>
-            <div className="text-sky-200">
-              Sleep
-            </div>
+            {endedAt && (
+              <DurationChip 
+                startedAt={startedAt} 
+                endedAt={endedAt}
+                variant="sky"
+              />
+            )}
           </div>
         </div>
-        <button 
-          onClick={() => setShowEditDialog(true)} 
-          className="p-1.5 hover:bg-sky-900/40 rounded"
-        >
-          <IconEdit className="w-5 h-5 text-sky-200" />
-        </button>
-      </div>
+      </button>
 
       {showEditDialog && (
         <EditSleepDialog
@@ -57,13 +66,10 @@ export default function SleepLog({
           startedAt={startedAt}
           endedAt={endedAt}
           onSave={handleSave}
-          onDelete={(id) => {
-            onDelete(id)
-            setShowEditDialog(false)
-          }}
+          onDelete={onDelete}
           onCancel={() => setShowEditDialog(false)}
         />
       )}
-    </div>
+    </>
   )
 } 

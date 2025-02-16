@@ -120,6 +120,7 @@ export default async function BabyDashboard({ params }: Props) {
       <Suspense fallback={<ActionBarSkeleton />}>
         <ActionBar 
           babyId={baby.id}
+          babyName={baby.name}
           activeSleep={activeSleep}
           lastSleep={lastSleep}
           activeFeeding={activeFeeding}

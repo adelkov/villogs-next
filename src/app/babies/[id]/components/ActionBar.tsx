@@ -25,6 +25,7 @@ interface FeedLog {
 
 interface ActionBarProps {
   babyId: string
+  babyName: string
   activeSleep: SleepLog | null
   lastSleep: SleepLog | null
   activeFeeding: FeedLog | null
@@ -33,11 +34,13 @@ interface ActionBarProps {
 function StatusBar({ 
   activeSleep, 
   lastSleep,
-  activeFeeding 
+  activeFeeding,
+  babyName
 }: { 
   activeSleep: SleepLog | null
   lastSleep: SleepLog | null
   activeFeeding: FeedLog | null
+  babyName: string
 }) {
   const [elapsedTime, setElapsedTime] = useState('')
   const [feedingTime, setFeedingTime] = useState('')
@@ -89,7 +92,7 @@ function StatusBar({
             ${activeSleep ? 'bg-sky-400' : 'bg-gray-400'}
           `} />
           <span className="font-medium text-lg text-gray-100">
-            {activeSleep ? 'Baby is sleeping' : 'Baby is awake'}
+            {activeSleep ? `${babyName} is sleeping` : `${babyName} is awake`}
           </span>
         </div>
         <div className="text-sm text-gray-300 font-mono">
@@ -119,6 +122,7 @@ function StatusBar({
 
 export default function ActionBar({ 
   babyId,
+  babyName,
   activeSleep, 
   lastSleep,
   activeFeeding
@@ -164,84 +168,80 @@ export default function ActionBar({
   // Render different button sets based on baby's state
   const renderActionButtons = () => {
     if (activeSleep) {
-      // When sleeping, show only the End Sleep button
       return (
-        <button 
-          onClick={handleSleepClick}
-          disabled={isPending}
-          className={`
-            bg-gray-900 border border-sky-800 rounded-lg p-4 
-            flex flex-col items-center w-full
-            hover:bg-gray-800 transition-colors
-            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-          `}
-        >
-          <div className="bg-sky-900/40 p-3 rounded-full mb-2">
-            <IconMoon className="w-6 h-6 text-sky-200" />
-          </div>
-          <h3 className="font-medium text-sky-100">End Sleep</h3>
-        </button>
+        <div className="grid grid-cols-1 gap-2 mb-4 w-full h-[104px]">
+          <button 
+            onClick={handleSleepClick}
+            disabled={isPending}
+            className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
+              border border-sky-800 rounded-lg p-3 hover:bg-gray-800
+              disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="bg-sky-900/40 p-3 rounded-full">
+              <IconMoon className="w-6 h-6 text-sky-200" />
+            </div>
+            <h3 className="font-medium text-sky-100 mt-2">End Sleep</h3>
+          </button>
+        </div>
       )
     }
 
     if (activeFeeding) {
-      // When feeding, show only the End Feeding button
       return (
-        <button 
-          onClick={handleFeedClick}
-          disabled={isPending}
-          className={`
-            bg-gray-900 border border-pink-400/50 rounded-lg p-4 
-            flex flex-col items-center w-full
-            hover:bg-gray-800 transition-colors
-            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-          `}
-        >
-          <div className="bg-pink-400/20 p-3 rounded-full mb-2">
-            <IconMilk className="w-6 h-6 text-pink-300" />
-          </div>
-          <h3 className="font-medium text-pink-300">End Feed</h3>
-        </button>
+        <div className="grid grid-cols-1 gap-2 mb-4 w-full h-[104px]">
+          <button 
+            onClick={handleFeedClick}
+            disabled={isPending}
+            className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
+              border border-pink-400/50 rounded-lg p-3 hover:bg-gray-800
+              disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <div className="bg-pink-400/20 p-3 rounded-full">
+              <IconMilk className="w-6 h-6 text-pink-300" />
+            </div>
+            <h3 className="font-medium text-pink-300 mt-2">End Feed</h3>
+          </button>
+        </div>
       )
     }
 
     // When awake and not feeding, show all action buttons
     return (
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className="grid grid-cols-3 gap-2 mb-4 w-full h-[104px]">
         <button 
           onClick={handleSleepClick}
           disabled={isPending}
-          className="flex items-center justify-center gap-2 bg-gray-900 
-            border border-gray-800 rounded-lg p-2 sm:p-4 hover:bg-gray-800"
+          className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
+            border border-gray-800 rounded-lg p-3 hover:bg-gray-800"
         >
-          <div className="bg-sky-900/40 p-3 rounded-full mb-2">
+          <div className="bg-sky-900/40 p-3 rounded-full">
             <IconMoon className="w-6 h-6 text-sky-200" />
           </div>
-          <h3 className="font-medium text-sky-100">Sleep</h3>
+          <h3 className="font-medium text-sky-100 mt-2">Sleep</h3>
         </button>
 
         <button 
           onClick={handleFeedClick}
           disabled={isPending}
-          className="flex items-center justify-center gap-2 bg-gray-900 
-            border border-gray-800 rounded-lg p-2 sm:p-4 hover:bg-gray-800"
+          className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
+            border border-gray-800 rounded-lg p-3 hover:bg-gray-800"
         >
-          <div className="bg-pink-400/20 p-3 rounded-full mb-2">
+          <div className="bg-pink-400/20 p-3 rounded-full">
             <IconMilk className="w-6 h-6 text-pink-300" />
           </div>
-          <h3 className="font-medium text-pink-300">Feed</h3>
+          <h3 className="font-medium text-pink-300 mt-2">Feed</h3>
         </button>
 
         <button 
           onClick={handleDiaperClick}
           disabled={isPending}
-          className="flex items-center justify-center gap-2 bg-gray-900 
-            border border-gray-800 rounded-lg p-2 sm:p-4 hover:bg-gray-800"
+          className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
+            border border-gray-800 rounded-lg p-3 hover:bg-gray-800"
         >
-          <div className="bg-amber-300/20 p-3 rounded-full mb-2">
+          <div className="bg-amber-300/20 p-3 rounded-full">
             <IconDroplet className="w-6 h-6 text-amber-200" />
           </div>
-          <h3 className="font-medium text-amber-200">Diaper</h3>
+          <h3 className="font-medium text-amber-200 mt-2">Diaper</h3>
         </button>
       </div>
     )
@@ -253,6 +253,7 @@ export default function ActionBar({
         activeSleep={activeSleep} 
         lastSleep={lastSleep}
         activeFeeding={activeFeeding}
+        babyName={babyName}
       />
       
       <div className="flex gap-2 mb-2 overflow-x-auto pb-2">
