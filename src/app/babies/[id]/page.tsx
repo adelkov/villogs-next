@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma'
-import { getStartOfBudapestDayUTC } from '@/utils/date'
+import { getStartOfBudapestDayUTC, getTimezoneOffsetFor } from '@/utils/date'
 import { createTimeline } from '@/utils/timeline'
 import type { breast_feed_logs, diaper_change_logs, sleep_logs } from '@prisma/client'
 import type { Metadata } from 'next'
@@ -101,6 +101,7 @@ export async function generateMetadata(
 export default async function BabyDashboard({ params }: Props) {
   const babyId = (await params).id
   const baby = await getBaby(babyId)
+  const offset = getTimezoneOffsetFor()
   
   const activeSleep = baby.sleep_logs.find(log => !log.ended_at) || null
   const lastSleep = !activeSleep ? baby.sleep_logs[0] || null : null
@@ -116,7 +117,8 @@ export default async function BabyDashboard({ params }: Props) {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      {startOfDay}
+      <p>{startOfDay}</p>
+      <p>{offset}</p>
       <ActionBar 
         babyId={baby.id}
         babyName={baby.name}

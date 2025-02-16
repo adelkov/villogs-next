@@ -17,7 +17,7 @@ export function getElapsedTime(fromTime: string): string {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
-function getTimezoneOffsetFor(date = new Date()) {
+export function getTimezoneOffsetFor(date = new Date()) {
   // Format the date to get the equivalent UTC time for the given timezone
   const localTime = new Intl.DateTimeFormat("en-US", {
     timeZone: "Europe/Budapest",
