@@ -29,15 +29,31 @@ export async function toggleSleep(babyId: string) {
   revalidatePath(`/babies/${babyId}`)
 }
 
-export async function startFeeding(babyId: string) {
-  await prisma.breast_feed_logs.create({
-    data: {
+export async function toggleFeeding(babyId: string, side: 'left' | 'right' = 'left') {
+  const ongoingFeed = await prisma.breast_feed_logs.findFirst({
+    where: {
       baby_id: BigInt(babyId),
-      started_at: new Date().toISOString(),
-      side: 'left' // You might want to make this configurable
+      ended_at: null
     }
   })
-  
+
+  if (ongoingFeed) {
+    // End feeding
+    await prisma.breast_feed_logs.update({
+      where: { id: ongoingFeed.id },
+      data: { ended_at: new Date().toISOString() }
+    })
+  } else {
+    // Start new feeding
+    await prisma.breast_feed_logs.create({
+      data: {
+        baby_id: BigInt(babyId),
+        started_at: new Date().toISOString(),
+        side: side
+      }
+    })
+  }
+
   revalidatePath(`/babies/${babyId}`)
 }
 

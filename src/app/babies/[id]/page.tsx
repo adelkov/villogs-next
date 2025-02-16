@@ -70,6 +70,7 @@ export default async function BabyDashboard({ params }: PageProps) {
 
   const activeSleep = baby.sleep_logs.find(log => !log.ended_at) || null
   const lastSleep = !activeSleep ? baby.sleep_logs[0] || null : null
+  const activeFeeding = baby.breast_feed_logs.find(log => !log.ended_at) || null
 
   return (
     <div className="p-8 bg-gray-950">
@@ -83,6 +84,7 @@ export default async function BabyDashboard({ params }: PageProps) {
           babyId={params.id}
           activeSleep={activeSleep}
           lastSleep={lastSleep}
+          activeFeeding={activeFeeding}
         />
       </Suspense>
 

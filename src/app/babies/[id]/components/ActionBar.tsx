@@ -5,8 +5,8 @@ import {
   IconMoon, 
   IconDroplet 
 } from '@tabler/icons-react'
-import { getElapsedTime } from '@/utils/date'
-import { toggleSleep, startFeeding, logDiaper } from '../actions'
+import { getElapsedTime, getElapsedTimeInMinSec } from '@/utils/date'
+import { toggleSleep, startFeeding, logDiaper, toggleFeeding } from '../actions'
 
 interface SleepLog {
   id: string
@@ -14,20 +14,41 @@ interface SleepLog {
   ended_at: string | null
 }
 
+interface FeedLog {
+  id: string
+  started_at: string
+  ended_at: string | null
+  side: 'left' | 'right'
+}
+
 interface ActionBarProps {
   babyId: string
   activeSleep: SleepLog | null
   lastSleep: SleepLog | null
+  activeFeeding: FeedLog | null
 }
 
-function SleepStatusBar({ activeSleep, lastSleep }: { 
+function StatusBar({ 
+  activeSleep, 
+  lastSleep,
+  activeFeeding 
+}: { 
   activeSleep: SleepLog | null
-  lastSleep: SleepLog | null 
+  lastSleep: SleepLog | null
+  activeFeeding: FeedLog | null
 }) {
   const [elapsedTime, setElapsedTime] = useState('')
+  const [feedingTime, setFeedingTime] = useState('')
+  const [awakeTime, setAwakeTime] = useState('')
 
   useEffect(() => {
-    const updateElapsedTime = () => {
+    const updateTimes = () => {
+      // Update feeding time if active - update every second for feeding
+      if (activeFeeding) {
+        setFeedingTime(getElapsedTimeInMinSec(activeFeeding.started_at))
+      }
+
+      // Update sleep/awake time
       const referenceTime = activeSleep 
         ? activeSleep.started_at 
         : lastSleep?.ended_at
@@ -35,38 +56,60 @@ function SleepStatusBar({ activeSleep, lastSleep }: {
       if (referenceTime) {
         setElapsedTime(getElapsedTime(referenceTime))
       }
+
+      // Calculate total awake time from last sleep
+      if (lastSleep?.ended_at) {
+        setAwakeTime(getElapsedTime(lastSleep.ended_at))
+      }
     }
 
-    updateElapsedTime()
-    const interval = setInterval(updateElapsedTime, 60000)
+    updateTimes()
+    // Update more frequently (every second) when feeding is active
+    const interval = setInterval(updateTimes, activeFeeding ? 1000 : 60000)
     return () => clearInterval(interval)
-  }, [activeSleep, lastSleep])
+  }, [activeSleep, lastSleep, activeFeeding])
 
   if (!activeSleep && !lastSleep) return null
 
   return (
     <div className={`
-      mb-8 p-4 rounded-lg flex items-center justify-between
+      mb-8 p-4 rounded-lg
       ${activeSleep 
         ? 'bg-violet-900/20 border border-violet-800' 
         : 'bg-gray-900 border border-gray-800'
       }
     `}>
-      <div className="flex items-center gap-3">
-        <div className={`
-          w-3 h-3 rounded-full animate-pulse
-          ${activeSleep ? 'bg-violet-400' : 'bg-gray-400'}
-        `} />
-        <span className="font-medium text-lg text-gray-100">
-          {activeSleep ? 'Baby is sleeping' : 'Baby is awake'}
-        </span>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-3">
+          <div className={`
+            w-3 h-3 rounded-full animate-pulse
+            ${activeSleep ? 'bg-violet-400' : 'bg-gray-400'}
+          `} />
+          <span className="font-medium text-lg text-gray-100">
+            {activeSleep ? 'Baby is sleeping' : 'Baby is awake'}
+          </span>
+        </div>
+        <div className="text-sm text-gray-300">
+          {activeSleep 
+            ? `Sleeping for ${elapsedTime}`
+            : `Awake for ${awakeTime}`
+          }
+        </div>
       </div>
-      <div className="text-sm text-gray-300">
-        {activeSleep 
-          ? `Sleeping for ${elapsedTime}`
-          : `Awake for ${elapsedTime}`
-        }
-      </div>
+
+      {activeFeeding && (
+        <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-800">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 rounded-full animate-pulse bg-pink-400" />
+            <span className="font-medium text-gray-100">
+              Feeding ({activeFeeding.side} side)
+            </span>
+          </div>
+          <div className="text-sm text-pink-300 font-mono">
+            {feedingTime}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -75,6 +118,7 @@ export default function ActionBar({
   babyId,
   activeSleep, 
   lastSleep,
+  activeFeeding
 }: ActionBarProps) {
   const [isPending, startTransition] = useTransition()
   
@@ -86,7 +130,7 @@ export default function ActionBar({
 
   const handleFeedClick = () => {
     startTransition(async () => {
-      await startFeeding(babyId)
+      await toggleFeeding(babyId)
     })
   }
 
@@ -98,7 +142,11 @@ export default function ActionBar({
 
   return (
     <div>
-      <SleepStatusBar activeSleep={activeSleep} lastSleep={lastSleep} />
+      <StatusBar 
+        activeSleep={activeSleep} 
+        lastSleep={lastSleep}
+        activeFeeding={activeFeeding}
+      />
       
       <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
         <button 
@@ -132,7 +180,9 @@ export default function ActionBar({
           <div className="bg-pink-900/40 p-3 rounded-full mb-2">
             <IconMilk className="w-6 h-6 text-pink-300" />
           </div>
-          <h3 className="font-medium text-pink-100">Feed</h3>
+          <h3 className="font-medium text-pink-100">
+            {activeFeeding ? 'End Feed' : 'Feed'}
+          </h3>
         </button>
 
         <button 
