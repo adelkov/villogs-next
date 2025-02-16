@@ -1,4 +1,4 @@
-import type { breast_feed_logs, sleep_logs, diaper_change_logs } from '@prisma/client'
+import type { breast_feed_logs, sleep_logs, diaper_change_logs, diaper_change_logs_type } from '@prisma/client'
 
 export type ActivityType = 'feed' | 'sleep' | 'diaper'
 
@@ -9,7 +9,7 @@ export interface TimelineActivity {
   ended_at: string | null
   details: {
     side?: 'left' | 'right'
-    diaperType?: string
+    diaperType?: diaper_change_logs_type
   }
 }
 
