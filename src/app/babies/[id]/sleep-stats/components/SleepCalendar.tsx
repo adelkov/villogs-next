@@ -36,9 +36,6 @@ const DAYS_OF_WEEK = [
   { key: 'sat', label: 'S' }
 ] as const
 
-function formatDuration(hours: number, minutes: number) {
-  return `${hours}h ${minutes.toString().padStart(2, '0')}m`
-}
 
 export default function SleepCalendar({ dailySleepData, currentDate }: Props) {
   const [currentDateState, setCurrentDate] = useState(currentDate)
@@ -54,23 +51,6 @@ export default function SleepCalendar({ dailySleepData, currentDate }: Props) {
   const previousMonth = () => setCurrentDate(subMonths(currentDateState, 1))
   const nextMonth = () => setCurrentDate(addMonths(currentDateState, 1))
 
-  // Calculate statistics
-  const totalSleep = dailySleepData.reduce((acc, day) => acc + day.totalSeconds, 0)
-  const totalHours = Math.floor(totalSleep / 3600)
-  const totalMinutes = Math.floor((totalSleep % 3600) / 60)
-  
-  const daysWithSleep = dailySleepData.filter(day => day.totalSeconds > 0)
-  const averageSeconds = daysWithSleep.length > 0 
-    ? totalSleep / daysWithSleep.length 
-    : 0
-  const avgHours = Math.floor(averageSeconds / 3600)
-  const avgMinutes = Math.floor((averageSeconds % 3600) / 60)
-
-  // Find best and worst days
-  const bestDay = [...dailySleepData]
-    .sort((a, b) => b.totalSeconds - a.totalSeconds)[0]
-  const worstDay = [...daysWithSleep]
-    .sort((a, b) => a.totalSeconds - b.totalSeconds)[0]
 
   return (
     <div className="space-y-4">

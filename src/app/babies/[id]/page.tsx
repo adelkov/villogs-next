@@ -1,14 +1,12 @@
-import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { getStartOfDay } from '@/utils/date'
 import { createTimeline } from '@/utils/timeline'
+import type { breast_feed_logs, diaper_change_logs, sleep_logs } from '@prisma/client'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { Suspense } from 'react'
 import ActionBar from './components/ActionBar'
-import ActionBarSkeleton from './components/ActionBarSkeleton'
-import TimelineWrapper from './components/TimelineWrapper'
-import type { breast_feed_logs, sleep_logs, diaper_change_logs } from '@prisma/client'
 import SleepSummary from './components/SleepSummary'
+import TimelineWrapper from './components/TimelineWrapper'
 
 type ConvertedLog<T> = Omit<T, 'id' | 'baby_id'> & {
   id: string
