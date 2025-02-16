@@ -8,6 +8,7 @@ import ActionBar from './components/ActionBar'
 import ActionBarSkeleton from './components/ActionBarSkeleton'
 import TimelineWrapper from './components/TimelineWrapper'
 import type { breast_feed_logs, sleep_logs, diaper_change_logs } from '@prisma/client'
+import SleepSummary from './components/SleepSummary'
 
 type ConvertedLog<T> = Omit<T, 'id' | 'baby_id'> & {
   id: string
@@ -114,19 +115,17 @@ export default async function BabyDashboard({ params }: Props) {
   )
 
   return (
-    <div className="p-2 sm:p-8 bg-gray-950">
+    <div className="max-w-2xl mx-auto p-4">
+      <ActionBar 
+        babyId={baby.id}
+        babyName={baby.name}
+        activeSleep={activeSleep}
+        lastSleep={lastSleep}
+        activeFeeding={activeFeeding}
+      />
       
-
-      <Suspense fallback={<ActionBarSkeleton />}>
-        <ActionBar 
-          babyId={baby.id}
-          babyName={baby.name}
-          activeSleep={activeSleep}
-          lastSleep={lastSleep}
-          activeFeeding={activeFeeding}
-        />
-      </Suspense>
-
+      <SleepSummary sleepLogs={baby.sleep_logs} />
+      
       <TimelineWrapper activities={timeline} />
     </div>
   )
