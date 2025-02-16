@@ -23,7 +23,7 @@ export default function BabyLayout({ children, params }: LayoutProps) {
   return (
     <div className="flex h-screen bg-gray-950">
       {/* Mobile Header with Hamburger */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-gray-900 border-b border-gray-800 flex items-center px-4 z-20">
+      <div className="md:hidden fixed bottom-0 right-0 h-16 bg-gray-900 border-b border-gray-800 flex items-center px-4 z-20">
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="text-gray-300 hover:text-white"
@@ -45,12 +45,15 @@ export default function BabyLayout({ children, params }: LayoutProps) {
           md:translate-x-0
         `}
       >
-        <nav className="p-6 space-y-8 mt-16 md:mt-0">
-          <div className="px-3 py-2">
-            <h2 className="text-lg font-semibold text-gray-100">Baby Monitor</h2>
+        <nav className="h-full flex flex-col">
+          <div className="p-6 mt-4 md:mt-0">
+            <div className="px-3 py-2">
+              <h2 className="text-lg font-semibold text-gray-100">Baby Monitor</h2>
+            </div>
           </div>
           
-          <div className="space-y-1">
+          {/* Navigation moved to bottom */}
+          <div className="mt-auto p-1 space-y-1">
             <Link 
               href={`/babies/${id}`}
               className="flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors"
@@ -87,7 +90,7 @@ export default function BabyLayout({ children, params }: LayoutProps) {
         </nav>
       </aside>
 
-      <main className="flex-1 overflow-y-auto md:pt-0 pt-16">
+      <main className="flex-1 overflow-y-auto md:pt-0 pt-2">
         {children}
       </main>
 

@@ -4,6 +4,7 @@ import { IconEdit, IconMoon } from '@tabler/icons-react'
 import { useState } from 'react'
 import EditSleepDialog from '../dialogs/EditSleepDialog'
 import DurationChip from '../DurationChip'
+import { format, parseISO } from 'date-fns'
 
 interface SleepLogProps {
   id: string
@@ -21,6 +22,10 @@ export default function SleepLog({
   onDelete 
 }: SleepLogProps) {
   const [showEditDialog, setShowEditDialog] = useState(false)
+
+  // Format dates consistently
+  const formattedStartTime = format(parseISO(startedAt), 'HH:mm')
+  const formattedEndTime = endedAt ? format(parseISO(endedAt), 'HH:mm') : null
 
   const handleSave = (id: string, newStartedAt: string, newEndedAt: string | null) => {
     onEdit(id, newStartedAt, newEndedAt)
@@ -41,8 +46,8 @@ export default function SleepLog({
               </div>
               <div>
                 <div className="text-sm text-sky-200/80">
-                  {formatTime(startedAt)}
-                  {endedAt && ` - ${formatTime(endedAt)}`}
+                  {formattedStartTime}
+                  {formattedEndTime && ` - ${formattedEndTime}`}
                 </div>
                 <div className="text-sky-200">
                   Sleep

@@ -1,6 +1,6 @@
 'use client'
 import { IconEdit, IconMilk } from '@tabler/icons-react'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { useState } from 'react'
 import EditFeedingDialog from '../dialogs/EditFeedingDialog'
 import DurationChip from '../DurationChip'
@@ -24,6 +24,9 @@ export default function FeedingLog({
 }: FeedingLogProps) {
   const [showEditDialog, setShowEditDialog] = useState(false)
 
+  const formattedStartTime = format(parseISO(startedAt), 'HH:mm')
+  const formattedEndTime = endedAt ? format(parseISO(endedAt), 'HH:mm') : null
+
   const handleSave = (id: string, newStartedAt: string, newEndedAt: string | null, newSide: 'left' | 'right') => {
     onEdit(id, newStartedAt, newEndedAt, newSide)
     setShowEditDialog(false)
@@ -43,8 +46,8 @@ export default function FeedingLog({
               </div>
               <div>
                 <div className="text-sm text-pink-300/80">
-                  {format(new Date(startedAt), 'HH:mm')}
-                  {endedAt && ` - ${format(new Date(endedAt), 'HH:mm')}`}
+                  {formattedStartTime}
+                  {formattedEndTime && ` - ${formattedEndTime}`}
                 </div>
                 <div className="text-pink-300">
                   Feeding ({side} side)
