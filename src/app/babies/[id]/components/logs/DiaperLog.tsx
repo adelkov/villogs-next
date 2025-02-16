@@ -4,7 +4,7 @@ import { formatTime } from '@/utils/date'
 
 interface DiaperLogProps {
   id: string
-  type: 'pee' | 'poop' | 'both' | 'empty'
+  type: string
   startedAt: string
   onEdit: () => void
   onDelete: () => void

@@ -1,6 +1,6 @@
-type ActivityType = 'feed' | 'sleep' | 'diaper'
+export type ActivityType = 'feed' | 'sleep' | 'diaper'
 
-interface TimelineActivity {
+export interface TimelineActivity {
   id: string
   type: ActivityType
   started_at: string
