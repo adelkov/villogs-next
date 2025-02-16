@@ -3,5 +3,7 @@ import { authConfig } from '@/auth'
 
 export const runtime = 'nodejs'
 
-const handler = NextAuth(authConfig)
-export { handler as GET, handler as POST }
+const auth = NextAuth(authConfig)
+
+// Export the auth handlers directly
+export const { GET, POST } = auth.handlers
