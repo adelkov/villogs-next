@@ -7,6 +7,7 @@ import {
 } from '@tabler/icons-react'
 import { getElapsedTime, getElapsedTimeInMinSec } from '@/utils/date'
 import { toggleSleep, startFeeding, logDiaper, toggleFeeding } from '../actions'
+import BreastSideDialog from './BreastSideDialog'
 
 interface SleepLog {
   id: string
@@ -121,6 +122,7 @@ export default function ActionBar({
   activeFeeding
 }: ActionBarProps) {
   const [isPending, startTransition] = useTransition()
+  const [showSideDialog, setShowSideDialog] = useState(false)
   
   const handleSleepClick = () => {
     startTransition(async () => {
@@ -129,8 +131,19 @@ export default function ActionBar({
   }
 
   const handleFeedClick = () => {
+    if (!activeFeeding) {
+      setShowSideDialog(true)
+    } else {
+      startTransition(async () => {
+        await toggleFeeding(babyId)
+      })
+    }
+  }
+
+  const handleSideSelect = (side: 'left' | 'right') => {
+    setShowSideDialog(false)
     startTransition(async () => {
-      await toggleFeeding(babyId)
+      await toggleFeeding(babyId, side)
     })
   }
 
@@ -249,6 +262,13 @@ export default function ActionBar({
       <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
         {renderActionButtons()}
       </div>
+
+      {showSideDialog && (
+        <BreastSideDialog
+          onSelect={handleSideSelect}
+          onCancel={() => setShowSideDialog(false)}
+        />
+      )}
     </div>
   )
 } 
