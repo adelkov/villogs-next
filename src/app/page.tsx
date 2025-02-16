@@ -18,7 +18,7 @@ export default async function Home() {
   const babies = await getBabies()
 
   return (
-    <div className="min-h-screen bg-gray-950 p-8">
+    <div className="min-h-screen bg-gray-950 p-2 sm:p-8">
       <div className="max-w-2xl mx-auto">
         <header className="mb-8">
           <h1 className="text-3xl font-bold mb-2 text-gray-100">Baby Tracker</h1>

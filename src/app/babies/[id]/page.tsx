@@ -114,11 +114,8 @@ export default async function BabyDashboard({ params }: Props) {
   )
 
   return (
-    <div className="p-8 bg-gray-950">
-      <header className="mb-2">
-        <h1 className="text-3xl font-bold mb-2 text-gray-100">{baby.name}</h1>
-        <p className="text-gray-400">Today&apos;s Activities</p>
-      </header>
+    <div className="p-2 sm:p-8 bg-gray-950">
+      
 
       <Suspense fallback={<ActionBarSkeleton />}>
         <ActionBar 

@@ -27,33 +27,29 @@ export default function SleepLog({
   }
 
   return (
-    <>
-      <button 
-        onClick={() => setShowEditDialog(true)}
-        className="w-full text-left"
-      >
-        <div className="bg-sky-900/40 border border-sky-800 rounded-lg p-4 flex items-center">
-          <div className="bg-sky-900/40 p-3 rounded-full mr-4">
-            <IconMoon className="w-6 h-6 text-sky-200" />
+    <div className="bg-sky-900/20 border border-sky-800/50 rounded-lg p-2 sm:p-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-sky-900/40 p-2 rounded-full">
+            <IconMoon className="w-5 h-5 text-sky-200" />
           </div>
-          <div className="flex-1">
-            <h3 className="font-medium text-sky-100">Sleep Time</h3>
-            <p className="text-sm text-sky-200">
-              Started at {formatTime(startedAt)}
-              {endedAt 
-                ? ` - Ended at ${formatTime(endedAt)}` 
-                : ' (Still sleeping)'
-              }
-            </p>
-          </div>
-          <div className="flex items-center">
-            <div className="p-1 bg-sky-900/40 rounded-full">
-              <IconEdit className="w-5 h-5 text-sky-200" />
+          <div>
+            <div className="text-sm text-sky-200/80">
+              {formatTime(startedAt)}
+              {endedAt && ` - ${formatTime(endedAt)}`}
             </div>
-            <IconClock className="w-5 h-5 text-sky-200 ml-4" />
+            <div className="text-sky-200">
+              Sleep
+            </div>
           </div>
         </div>
-      </button>
+        <button 
+          onClick={() => setShowEditDialog(true)} 
+          className="p-1.5 hover:bg-sky-900/40 rounded"
+        >
+          <IconEdit className="w-5 h-5 text-sky-200" />
+        </button>
+      </div>
 
       {showEditDialog && (
         <EditSleepDialog
@@ -68,6 +64,6 @@ export default function SleepLog({
           onCancel={() => setShowEditDialog(false)}
         />
       )}
-    </>
+    </div>
   )
 } 

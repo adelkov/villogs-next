@@ -1,8 +1,9 @@
 'use client'
-import { IconMilk, IconClock, IconEdit } from '@tabler/icons-react'
+import { IconMilk, IconClock, IconEdit, IconTrash } from '@tabler/icons-react'
 import { formatTime } from '@/utils/date'
 import { useState } from 'react'
 import EditFeedingDialog from '../dialogs/EditFeedingDialog'
+import { format } from 'date-fns'
 
 interface FeedingLogProps {
   id: string
@@ -29,35 +30,29 @@ export default function FeedingLog({
   }
 
   return (
-    <>
-      <button 
-        onClick={() => setShowEditDialog(true)}
-        className="w-full text-left"
-      >
-        <div className="bg-pink-400/20 border border-pink-400/50 rounded-lg p-4 flex items-center">
-          <div className="bg-pink-400/20 p-3 rounded-full mr-4">
-            <IconMilk className="w-6 h-6 text-pink-300" />
+    <div className="bg-pink-400/10 border border-pink-400/30 rounded-lg p-2 sm:p-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <div className="bg-pink-400/20 p-2 rounded-full">
+            <IconMilk className="w-5 h-5 text-pink-300" />
           </div>
-          <div className="flex-1">
-            <h3 className="font-medium text-pink-300">
-              Feeding - {side} side
-            </h3>
-            <p className="text-sm text-pink-300/80">
-              Started at {formatTime(startedAt)}
-              {endedAt 
-                ? ` - Ended at ${formatTime(endedAt)}` 
-                : ' (Ongoing)'
-              }
-            </p>
-          </div>
-          <div className="flex items-center">
-            <div className="p-1 bg-pink-400/20 rounded-full">
-              <IconEdit className="w-5 h-5 text-pink-300" />
+          <div>
+            <div className="text-sm text-pink-300/80">
+              {format(new Date(startedAt), 'HH:mm')}
+              {endedAt && ` - ${format(new Date(endedAt), 'HH:mm')}`}
             </div>
-            <IconClock className="w-5 h-5 text-pink-300 ml-4" />
+            <div className="text-pink-300">
+              Feeding ({side} side)
+            </div>
           </div>
         </div>
-      </button>
+        <button 
+          onClick={() => setShowEditDialog(true)} 
+          className="p-1.5 hover:bg-pink-400/20 rounded"
+        >
+          <IconEdit className="w-5 h-5 text-pink-300" />
+        </button>
+      </div>
 
       {showEditDialog && (
         <EditFeedingDialog
@@ -73,6 +68,6 @@ export default function FeedingLog({
           onCancel={() => setShowEditDialog(false)}
         />
       )}
-    </>
+    </div>
   )
 } 
