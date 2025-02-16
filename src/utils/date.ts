@@ -17,21 +17,35 @@ export function getElapsedTime(fromTime: string): string {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
+function getTimezoneOffsetFor(date = new Date()) {
+  // Format the date to get the equivalent UTC time for the given timezone
+  const localTime = new Intl.DateTimeFormat("en-US", {
+    timeZone: "Europe/Budapest",
+    hour12: false,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  }).format(date);
+  // Convert formatted local time into a Date object (in local timezone)
+  const match = localTime.match(/\d+/g);
+  if (!match) throw new Error('Failed to parse date');
+  const [month, day, year, hour, minute, second] = match;
+  const tzDate = new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}Z`);
+
+  // Calculate the offset difference in minutes
+  return (tzDate.getTime() - date.getTime()) / 60000;
+}
+
+
 export function getStartOfBudapestDayUTC(date = new Date()) {
-  // Budapest timezone offset in minutes:
-  // - CET (Winter) = UTC+1 → offset = -60 minutes
-  // - CEST (Summer) = UTC+2 → offset = -120 minutes
-  const budapestOffset = new Date().toLocaleString("en-US", { timeZone: "Europe/Budapest", hour12: false });
-  const currentOffset = new Date(budapestOffset).getTimezoneOffset(); // in minutes
-
-  // Get the start of the given day in Budapest time
-  const budapestMidnight = new Date(date);
-  budapestMidnight.setUTCHours(0, 0, 0, 0); // Set to 00:00:00 UTC
-
-  // Adjust for Budapest's timezone (convert from local to UTC)
-  budapestMidnight.setMinutes(budapestMidnight.getMinutes() + currentOffset);
-
-  return budapestMidnight.toISOString();
+  const offset = getTimezoneOffsetFor(date)
+  const budapestMidnight = new Date(date)
+  budapestMidnight.setMinutes(budapestMidnight.getMinutes() + offset)
+  budapestMidnight.setHours(0, 0, 0, 0)
+  return budapestMidnight.toISOString()
 }
 
 
