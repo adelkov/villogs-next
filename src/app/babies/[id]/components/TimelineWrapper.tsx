@@ -42,7 +42,6 @@ export default function TimelineWrapper({ activities }: TimelineWrapperProps) {
       router.refresh()
     } catch (error) {
       console.error('Failed to edit activity:', error)
-      // TODO: Add error toast notification
     } finally {
       setIsProcessing(false)
     }

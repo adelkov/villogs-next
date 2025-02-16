@@ -67,8 +67,10 @@ export default function ActivityTimeline({
                 id={activity.id}
                 type={activity.details.diaperType!}
                 startedAt={activity.started_at}
-                onEdit={() => onEditActivity(activity.id, 'diaper', {})}
-                onDelete={() => onDeleteActivity(activity.id, 'diaper')}
+                onEdit={(id, startedAt, type) => 
+                  onEditActivity(id, 'diaper', { startedAt, type })
+                }
+                onDelete={(id) => onDeleteActivity(id, 'diaper')}
               />
             )
         }

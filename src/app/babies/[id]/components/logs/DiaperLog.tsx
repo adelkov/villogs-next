@@ -2,22 +2,29 @@
 import { IconDroplet, IconClock, IconEdit, IconTrash } from '@tabler/icons-react'
 import { formatTime } from '@/utils/date'
 import { useState } from 'react'
+import EditDiaperDialog from '../dialogs/EditDiaperDialog'
 
 interface DiaperLogProps {
   id: string
   type: string
   startedAt: string
-  onEdit: () => void
-  onDelete: () => void
+  onEdit: (id: string, startedAt: string, type: string) => void
+  onDelete: (id: string) => void
 }
 
 export default function DiaperLog({ 
+  id,
   type, 
   startedAt,
   onEdit,
   onDelete 
 }: DiaperLogProps) {
   const [showEditDialog, setShowEditDialog] = useState(false)
+
+  const handleSave = (id: string, newStartedAt: string, newType: string) => {
+    onEdit(id, newStartedAt, newType)
+    setShowEditDialog(false)
+  }
 
   return (
     <>
@@ -46,7 +53,19 @@ export default function DiaperLog({
         </div>
       </button>
 
-      {/* ... EditDialog component ... */}
+      {showEditDialog && (
+        <EditDiaperDialog
+          id={id}
+          startedAt={startedAt}
+          type={type}
+          onSave={handleSave}
+          onDelete={(id) => {
+            onDelete(id)
+            setShowEditDialog(false)
+          }}
+          onCancel={() => setShowEditDialog(false)}
+        />
+      )}
     </>
   )
 } 
