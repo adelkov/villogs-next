@@ -1,4 +1,3 @@
-import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import { 
   IconMilk, 
@@ -7,7 +6,10 @@ import {
   IconClock 
 } from '@tabler/icons-react'
 import { format, parseISO } from 'date-fns'
-import { use } from 'react'
+import { Suspense } from 'react'
+import { prisma } from '@/lib/prisma'
+import ActionBar from './components/ActionBar'
+import ActionBarSkeleton from './components/ActionBarSkeleton'
 
 async function getBaby(id: string) {
   const today = new Date()
@@ -86,22 +88,14 @@ function formatTime(dateStr: string) {
 }
 
 interface PageProps {
-  params: Promise<{ id: string }>
+  params: { id: string }
 }
 
-export default function BabyDashboard({ params }: PageProps) {
-  const { id } = use(params)
-  const baby = use(getBaby(id))
+export default async function BabyDashboard({ params }: PageProps) {
+  const baby = await getBaby(params.id)
 
-  // Debug log
-  console.log('Rendering data:', {
-    name: baby.name,
-    activities: {
-      feeds: baby.breast_feed_logs.length,
-      sleep: baby.sleep_logs.length,
-      diapers: baby.diaper_change_logs.length
-    }
-  })
+  const activeSleep = baby.sleep_logs.find(log => !log.ended_at) || null
+  const lastSleep = !activeSleep ? baby.sleep_logs[0] || null : null
 
   return (
     <div className="p-8 bg-gray-950">
@@ -110,32 +104,13 @@ export default function BabyDashboard({ params }: PageProps) {
         <p className="text-gray-400">Today&apos;s Activities</p>
       </header>
 
-      {/* Action Buttons - now always horizontal */}
-      <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
-        {/* Sleep Action */}
-        <div className="bg-gray-900 border border-violet-800 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors flex-1 min-w-[120px]">
-          <div className="bg-violet-900/40 p-3 rounded-full mb-2">
-            <IconMoon className="w-6 h-6 text-violet-200" />
-          </div>
-          <h3 className="font-medium text-violet-100">Sleep</h3>
-        </div>
-
-        {/* Breastfeeding Action */}
-        <div className="bg-gray-900 border border-pink-900 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors flex-1 min-w-[120px]">
-          <div className="bg-pink-900/40 p-3 rounded-full mb-2">
-            <IconMilk className="w-6 h-6 text-pink-300" />
-          </div>
-          <h3 className="font-medium text-pink-100">Feed</h3>
-        </div>
-
-        {/* Diaper Change Action */}
-        <div className="bg-gray-900 border border-green-900 rounded-lg p-4 flex flex-col items-center cursor-pointer hover:bg-gray-800 transition-colors flex-1 min-w-[120px]">
-          <div className="bg-green-900/40 p-3 rounded-full mb-2">
-            <IconDroplet className="w-6 h-6 text-green-300" />
-          </div>
-          <h3 className="font-medium text-green-100">Diaper</h3>
-        </div>
-      </div>
+      <Suspense fallback={<ActionBarSkeleton />}>
+        <ActionBar 
+          babyId={params.id}
+          activeSleep={activeSleep}
+          lastSleep={lastSleep}
+        />
+      </Suspense>
 
       <div className="grid gap-6">
         {/* Debug output */}
