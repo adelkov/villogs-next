@@ -1,25 +1,12 @@
 import { prisma } from '@/lib/prisma'
+import type { BabyWithLogs } from '@/types/prisma'
 import { getStartOfBudapestDayUTC } from '@/utils/date'
 import { createTimeline } from '@/utils/timeline'
-import type { breast_feed_logs, diaper_change_logs, sleep_logs } from '@prisma/client'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import ActionBar from './components/ActionBar'
 import SleepSummary from './components/SleepSummary'
 import TimelineWrapper from './components/TimelineWrapper'
-
-type ConvertedLog<T> = Omit<T, 'id' | 'baby_id'> & {
-  id: string
-  baby_id: string
-}
-
-interface BabyWithLogs {
-  id: string
-  name: string
-  breast_feed_logs: ConvertedLog<breast_feed_logs>[]
-  sleep_logs: ConvertedLog<sleep_logs>[]
-  diaper_change_logs: ConvertedLog<diaper_change_logs>[]
-}
 
 async function getBaby(id: string): Promise<BabyWithLogs> {
   const startOfDay = getStartOfBudapestDayUTC()

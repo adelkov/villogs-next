@@ -1,12 +1,8 @@
 'use client'
 import { IconMoon } from '@tabler/icons-react'
-import type { sleep_logs } from '@prisma/client'
 import { calculateDailySleep } from '@/utils/sleep'
-
-type SleepLog = Omit<sleep_logs, 'id' | 'baby_id'> & {
-  id: string
-  baby_id: string
-}
+import type { SleepSummary } from '@/types/sleep'
+import type { SleepLog } from '@/types/prisma'
 
 interface Props {
   sleepLogs: SleepLog[]

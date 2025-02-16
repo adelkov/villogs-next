@@ -78,6 +78,7 @@ interface EditLogData {
   endedAt?: string | null
   side?: 'left' | 'right'
   type?: diaper_change_logs_type
+  diaperType?: diaper_change_logs_type
 }
 
 // Handle each table type separately
@@ -141,7 +142,15 @@ export const deleteLog = withAuth(async (session, id: string, type: LogType) => 
 })
 
 export const editLog = withAuth(async (session, id: string, type: LogType, data: EditLogData) => {
+  console.log('editLog', id, type, data)
   await prisma.$transaction(async () => {
+
+    // of tupe is diaper, we need to rename diaperType to type
+    if (type === 'diaper') {
+      data.type = data.diaperType
+      delete data.diaperType
+    }
+
     await updateTable(type, id, data)
   })
 

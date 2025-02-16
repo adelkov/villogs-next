@@ -9,19 +9,8 @@ import { getElapsedTime, getElapsedTimeInMinSec } from '@/utils/date'
 import { toggleSleep, logDiaper, toggleFeeding } from '../actions'
 import BreastSideDialog from './BreastSideDialog'
 import DiaperTypeDialog from './DiaperTypeDialog'
+import type { FeedLog, SleepLog } from '@/types/prisma'
 
-interface SleepLog {
-  id: string
-  started_at: string
-  ended_at: string | null
-}
-
-interface FeedLog {
-  id: string
-  started_at: string
-  ended_at: string | null
-  side: 'left' | 'right'
-}
 
 interface ActionBarProps {
   babyId: string
