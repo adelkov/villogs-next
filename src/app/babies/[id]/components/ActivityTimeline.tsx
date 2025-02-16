@@ -41,8 +41,10 @@ export default function ActivityTimeline({
                 side={activity.details.side!}
                 startedAt={activity.started_at}
                 endedAt={activity.ended_at}
-                onEdit={() => onEditActivity(activity.id, 'feed', {})}
-                onDelete={() => onDeleteActivity(activity.id, 'feed')}
+                onEdit={(id, startedAt, endedAt, side) => 
+                  onEditActivity(id, 'feed', { startedAt, endedAt, side })
+                }
+                onDelete={(id) => onDeleteActivity(id, 'feed')}
               />
             )
 

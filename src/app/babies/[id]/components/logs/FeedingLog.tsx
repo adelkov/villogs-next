@@ -2,17 +2,19 @@
 import { IconMilk, IconClock, IconEdit, IconTrash } from '@tabler/icons-react'
 import { formatTime } from '@/utils/date'
 import { useState } from 'react'
+import EditFeedingDialog from '../dialogs/EditFeedingDialog'
 
 interface FeedingLogProps {
   id: string
   side: 'left' | 'right'
   startedAt: string
   endedAt: string | null
-  onEdit: () => void
-  onDelete: () => void
+  onEdit: (id: string, startedAt: string, endedAt: string | null, side: 'left' | 'right') => void
+  onDelete: (id: string) => void
 }
 
 export default function FeedingLog({ 
+  id,
   side, 
   startedAt, 
   endedAt,
@@ -20,6 +22,11 @@ export default function FeedingLog({
   onDelete 
 }: FeedingLogProps) {
   const [showEditDialog, setShowEditDialog] = useState(false)
+
+  const handleSave = (id: string, newStartedAt: string, newEndedAt: string | null, newSide: 'left' | 'right') => {
+    onEdit(id, newStartedAt, newEndedAt, newSide)
+    setShowEditDialog(false)
+  }
 
   return (
     <>
@@ -52,7 +59,20 @@ export default function FeedingLog({
         </div>
       </button>
 
-      {/* ... EditDialog component ... */}
+      {showEditDialog && (
+        <EditFeedingDialog
+          id={id}
+          startedAt={startedAt}
+          endedAt={endedAt}
+          side={side}
+          onSave={handleSave}
+          onDelete={(id) => {
+            onDelete(id)
+            setShowEditDialog(false)
+          }}
+          onCancel={() => setShowEditDialog(false)}
+        />
+      )}
     </>
   )
 } 
