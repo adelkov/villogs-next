@@ -1,10 +1,9 @@
 'use client'
-import { formatTime } from '@/utils/date'
-import { IconEdit, IconMoon } from '@tabler/icons-react'
+import { IconMoon } from '@tabler/icons-react'
+import { format, parseISO } from 'date-fns'
 import { useState } from 'react'
 import EditSleepDialog from '../dialogs/EditSleepDialog'
 import DurationChip from '../DurationChip'
-import { format, parseISO } from 'date-fns'
 
 interface SleepLogProps {
   id: string

@@ -1,5 +1,5 @@
 'use client'
-import { IconEdit, IconMilk } from '@tabler/icons-react'
+import { IconMilk } from '@tabler/icons-react'
 import { format, parseISO } from 'date-fns'
 import { useState } from 'react'
 import EditFeedingDialog from '../dialogs/EditFeedingDialog'
