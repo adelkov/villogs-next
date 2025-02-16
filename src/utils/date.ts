@@ -1,5 +1,4 @@
-import { format, parseISO, startOfDay } from 'date-fns'
-import { toZonedTime } from 'date-fns-tz'
+import { format, parseISO } from 'date-fns'
 
 
 export function formatTime(dateStr: string) {
@@ -17,17 +16,6 @@ export function getElapsedTime(fromTime: string): string {
   
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
-
-export function getStartOfDay(date: Date = new Date()) {
-  // Get user's timezone
- const timeZone = 'Europe/Budapest' // Set the correct timezone
-
-  
-  // Convert to user's timezone and get start of day
-  const zonedDate = toZonedTime(date, timeZone)
-  return startOfDay(zonedDate)
-}
-
 
 export function getStartOfBudapestDayUTC(date = new Date()) {
   // Budapest timezone offset in minutes:
