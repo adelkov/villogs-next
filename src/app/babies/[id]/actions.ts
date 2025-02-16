@@ -57,12 +57,12 @@ export async function toggleFeeding(babyId: string, side: 'left' | 'right' = 'le
   revalidatePath(`/babies/${babyId}`)
 }
 
-export async function logDiaper(babyId: string) {
+export async function logDiaper(babyId: string, type: 'pee' | 'poop' | 'both' | 'empty') {
   await prisma.diaper_change_logs.create({
     data: {
       baby_id: BigInt(babyId),
       started_at: new Date().toISOString(),
-      type: 'pee' // You might want to make this configurable
+      type
     }
   })
   

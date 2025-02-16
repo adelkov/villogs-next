@@ -8,6 +8,7 @@ import {
 import { getElapsedTime, getElapsedTimeInMinSec } from '@/utils/date'
 import { toggleSleep, startFeeding, logDiaper, toggleFeeding } from '../actions'
 import BreastSideDialog from './BreastSideDialog'
+import DiaperTypeDialog from './DiaperTypeDialog'
 
 interface SleepLog {
   id: string
@@ -123,6 +124,7 @@ export default function ActionBar({
 }: ActionBarProps) {
   const [isPending, startTransition] = useTransition()
   const [showSideDialog, setShowSideDialog] = useState(false)
+  const [showDiaperDialog, setShowDiaperDialog] = useState(false)
   
   const handleSleepClick = () => {
     startTransition(async () => {
@@ -148,8 +150,13 @@ export default function ActionBar({
   }
 
   const handleDiaperClick = () => {
+    setShowDiaperDialog(true)
+  }
+
+  const handleDiaperTypeSelect = (type: 'pee' | 'poop' | 'both' | 'empty') => {
+    setShowDiaperDialog(false)
     startTransition(async () => {
-      await logDiaper(babyId)
+      await logDiaper(babyId, type)
     })
   }
 
@@ -267,6 +274,13 @@ export default function ActionBar({
         <BreastSideDialog
           onSelect={handleSideSelect}
           onCancel={() => setShowSideDialog(false)}
+        />
+      )}
+
+      {showDiaperDialog && (
+        <DiaperTypeDialog
+          onSelect={handleDiaperTypeSelect}
+          onCancel={() => setShowDiaperDialog(false)}
         />
       )}
     </div>
