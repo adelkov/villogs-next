@@ -21,9 +21,9 @@ export default function BabyLayout({ children, params }: LayoutProps) {
   const { id } = use(params)
 
   return (
-    <div className="flex h-screen bg-gray-950">
+    <div className="flex h-screen">
       {/* Mobile Header with Hamburger */}
-      <div className="md:hidden fixed bottom-0 right-0 h-16 bg-gray-900 border-b border-gray-800 flex items-center px-4 z-20">
+      <div className="md:hidden fixed bottom-1 rounded-full right-1 w-12 h-12 bg-gray-900 bg-opacity-60 backdrop-blur-sm border-b border-gray-800 flex items-center justify-center z-20">
         <button 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="text-gray-300 hover:text-white"

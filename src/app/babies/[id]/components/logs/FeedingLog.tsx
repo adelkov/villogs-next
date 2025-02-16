@@ -45,7 +45,7 @@ export default function FeedingLog({
                 <IconMilk className="w-5 h-5 text-gray-950" />
               </div>
               <div>
-                <div className="text-sm text-gray-950/80">
+                <div className="text-sm font-bold font-mono text-gray-950/80">
                   {formattedStartTime}
                   {formattedEndTime && ` - ${formattedEndTime}`}
                 </div>
