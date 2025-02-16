@@ -8,7 +8,8 @@ import {
   IconBabyCarriage, 
   IconDroplet,
   IconMenu2,
-  IconX
+  IconX,
+  IconChartBar
 } from '@tabler/icons-react'
 
 interface LayoutProps {
@@ -77,6 +78,14 @@ export default function BabyLayout({ children, params }: LayoutProps) {
             >
               <IconMoon className="w-5 h-5 mr-3" />
               Sleep Tracking
+            </Link>
+            <Link 
+              href={`/babies/${id}/sleep-stats`}
+              className="flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              <IconChartBar className="w-5 h-5 mr-3" />
+              Sleep Stats
             </Link>
             <Link 
               href={`/babies/${id}/diapers`}
