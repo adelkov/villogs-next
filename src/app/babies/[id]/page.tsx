@@ -8,14 +8,13 @@ import {
 import { format, parseISO } from 'date-fns'
 import { Suspense } from 'react'
 import { prisma } from '@/lib/prisma'
+import { getStartOfDay } from '@/utils/date'
+import { convertBigIntsToStrings } from '@/utils/prisma'
 import ActionBar from './components/ActionBar'
 import ActionBarSkeleton from './components/ActionBarSkeleton'
 
 async function getBaby(id: string) {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  console.log('Fetching data for date:', today.toISOString())  // Debug log
+  const today = getStartOfDay()
 
   const baby = await prisma.babies.findUnique({
     where: {
@@ -55,32 +54,7 @@ async function getBaby(id: string) {
     notFound()
   }
 
-  // Debug log
-  console.log('Retrieved data:', {
-    breast_feed_logs: baby.breast_feed_logs.length,
-    sleep_logs: baby.sleep_logs.length,
-    diaper_change_logs: baby.diaper_change_logs.length
-  })
-
-  return {
-    ...baby,
-    id: baby.id.toString(),
-    breast_feed_logs: baby.breast_feed_logs.map(log => ({
-      ...log,
-      id: log.id.toString(),
-      baby_id: log.baby_id.toString()
-    })),
-    sleep_logs: baby.sleep_logs.map(log => ({
-      ...log,
-      id: log.id.toString(),
-      baby_id: log.baby_id.toString()
-    })),
-    diaper_change_logs: baby.diaper_change_logs.map(log => ({
-      ...log,
-      id: log.id.toString(),
-      baby_id: log.baby_id.toString()
-    }))
-  }
+  return convertBigIntsToStrings(baby)
 }
 
 function formatTime(dateStr: string) {

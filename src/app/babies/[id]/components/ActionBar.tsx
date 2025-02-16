@@ -1,11 +1,11 @@
 'use client'
 import { useState, useEffect, useTransition } from 'react'
-import { formatDistanceToNow } from 'date-fns'
 import { 
   IconMilk, 
   IconMoon, 
   IconDroplet 
 } from '@tabler/icons-react'
+import { getElapsedTime } from '@/utils/date'
 import { toggleSleep, startFeeding, logDiaper } from '../actions'
 
 interface SleepLog {
@@ -33,7 +33,7 @@ function SleepStatusBar({ activeSleep, lastSleep }: {
         : lastSleep?.ended_at
 
       if (referenceTime) {
-        setElapsedTime(formatDistanceToNow(new Date(referenceTime)))
+        setElapsedTime(getElapsedTime(referenceTime))
       }
     }
 
