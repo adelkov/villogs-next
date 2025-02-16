@@ -140,6 +140,104 @@ export default function ActionBar({
     })
   }
 
+  // Render different button sets based on baby's state
+  const renderActionButtons = () => {
+    if (activeSleep) {
+      // When sleeping, show only the End Sleep button
+      return (
+        <button 
+          onClick={handleSleepClick}
+          disabled={isPending}
+          className={`
+            bg-gray-900 border border-violet-800 rounded-lg p-4 
+            flex flex-col items-center w-full
+            hover:bg-gray-800 transition-colors
+            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+          `}
+        >
+          <div className="bg-violet-900/40 p-3 rounded-full mb-2">
+            <IconMoon className="w-6 h-6 text-violet-200" />
+          </div>
+          <h3 className="font-medium text-violet-100">End Sleep</h3>
+        </button>
+      )
+    }
+
+    if (activeFeeding) {
+      // When feeding, show only the End Feeding button
+      return (
+        <button 
+          onClick={handleFeedClick}
+          disabled={isPending}
+          className={`
+            bg-gray-900 border border-pink-900 rounded-lg p-4 
+            flex flex-col items-center w-full
+            hover:bg-gray-800 transition-colors
+            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+          `}
+        >
+          <div className="bg-pink-900/40 p-3 rounded-full mb-2">
+            <IconMilk className="w-6 h-6 text-pink-300" />
+          </div>
+          <h3 className="font-medium text-pink-100">End Feed</h3>
+        </button>
+      )
+    }
+
+    // When awake and not feeding, show all action buttons
+    return (
+      <>
+        <button 
+          onClick={handleSleepClick}
+          disabled={isPending}
+          className={`
+            bg-gray-900 border border-violet-800 rounded-lg p-4 
+            flex flex-col items-center flex-1
+            hover:bg-gray-800 transition-colors min-w-[120px]
+            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+          `}
+        >
+          <div className="bg-violet-900/40 p-3 rounded-full mb-2">
+            <IconMoon className="w-6 h-6 text-violet-200" />
+          </div>
+          <h3 className="font-medium text-violet-100">Sleep</h3>
+        </button>
+
+        <button 
+          onClick={handleFeedClick}
+          disabled={isPending}
+          className={`
+            bg-gray-900 border border-pink-900 rounded-lg p-4 
+            flex flex-col items-center flex-1
+            hover:bg-gray-800 transition-colors min-w-[120px]
+            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+          `}
+        >
+          <div className="bg-pink-900/40 p-3 rounded-full mb-2">
+            <IconMilk className="w-6 h-6 text-pink-300" />
+          </div>
+          <h3 className="font-medium text-pink-100">Feed</h3>
+        </button>
+
+        <button 
+          onClick={handleDiaperClick}
+          disabled={isPending}
+          className={`
+            bg-gray-900 border border-green-900 rounded-lg p-4 
+            flex flex-col items-center flex-1
+            hover:bg-gray-800 transition-colors min-w-[120px]
+            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+          `}
+        >
+          <div className="bg-green-900/40 p-3 rounded-full mb-2">
+            <IconDroplet className="w-6 h-6 text-green-300" />
+          </div>
+          <h3 className="font-medium text-green-100">Diaper</h3>
+        </button>
+      </>
+    )
+  }
+
   return (
     <div>
       <StatusBar 
@@ -149,57 +247,7 @@ export default function ActionBar({
       />
       
       <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
-        <button 
-          onClick={handleSleepClick}
-          disabled={isPending}
-          className={`
-            bg-gray-900 border border-violet-800 rounded-lg p-4 
-            flex flex-col items-center 
-            hover:bg-gray-800 transition-colors flex-1 min-w-[120px]
-            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-          `}
-        >
-          <div className="bg-violet-900/40 p-3 rounded-full mb-2">
-            <IconMoon className="w-6 h-6 text-violet-200" />
-          </div>
-          <h3 className="font-medium text-violet-100">
-            {activeSleep ? 'End Sleep' : 'Sleep'}
-          </h3>
-        </button>
-
-        <button 
-          onClick={handleFeedClick}
-          disabled={isPending}
-          className={`
-            bg-gray-900 border border-pink-900 rounded-lg p-4 
-            flex flex-col items-center 
-            hover:bg-gray-800 transition-colors flex-1 min-w-[120px]
-            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-          `}
-        >
-          <div className="bg-pink-900/40 p-3 rounded-full mb-2">
-            <IconMilk className="w-6 h-6 text-pink-300" />
-          </div>
-          <h3 className="font-medium text-pink-100">
-            {activeFeeding ? 'End Feed' : 'Feed'}
-          </h3>
-        </button>
-
-        <button 
-          onClick={handleDiaperClick}
-          disabled={isPending}
-          className={`
-            bg-gray-900 border border-green-900 rounded-lg p-4 
-            flex flex-col items-center 
-            hover:bg-gray-800 transition-colors flex-1 min-w-[120px]
-            ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-          `}
-        >
-          <div className="bg-green-900/40 p-3 rounded-full mb-2">
-            <IconDroplet className="w-6 h-6 text-green-300" />
-          </div>
-          <h3 className="font-medium text-green-100">Diaper</h3>
-        </button>
+        {renderActionButtons()}
       </div>
     </div>
   )
