@@ -102,6 +102,9 @@ export default async function BabyDashboard({ params }: Props) {
   const babyId = (await params).id
   const baby = await getBaby(babyId)
   const offset = getTimezoneOffsetFor()
+  const startOfDayUTC = new Date()
+  startOfDayUTC.setHours(0, 0, 0, 0)
+  startOfDayUTC.setMinutes(startOfDayUTC.getMinutes() - offset)
   
   const activeSleep = baby.sleep_logs.find(log => !log.ended_at) || null
   const lastSleep = !activeSleep ? baby.sleep_logs[0] || null : null
@@ -119,6 +122,7 @@ export default async function BabyDashboard({ params }: Props) {
     <div className="max-w-2xl mx-auto p-4">
       <p>{startOfDay}</p>
       <p>{offset}</p>
+      <p>{startOfDayUTC.toISOString()}</p>
       <ActionBar 
         babyId={baby.id}
         babyName={baby.name}

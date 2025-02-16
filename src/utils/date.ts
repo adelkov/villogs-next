@@ -41,11 +41,14 @@ export function getTimezoneOffsetFor(date = new Date()) {
 
 
 export function getStartOfBudapestDayUTC(date = new Date()) {
-  const offset = getTimezoneOffsetFor(date)
-  const budapestMidnight = new Date(date)
-  budapestMidnight.setMinutes(budapestMidnight.getMinutes() + offset)
-  budapestMidnight.setHours(0, 0, 0, 0)
-  return budapestMidnight.toISOString()
+  const startOfDay = new Date(date)
+  startOfDay.setHours(0)
+  startOfDay.setMinutes(0)
+  startOfDay.setSeconds(0)
+  startOfDay.setMilliseconds(0)
+  const offset = getTimezoneOffsetFor(startOfDay)
+  startOfDay.setMinutes(startOfDay.getMinutes() - offset)
+  return startOfDay.toISOString()
 }
 
 
