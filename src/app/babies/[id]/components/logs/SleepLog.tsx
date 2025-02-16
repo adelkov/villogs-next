@@ -32,13 +32,13 @@ export default function SleepLog({
         onClick={() => setShowEditDialog(true)}
         className="w-full text-left"
       >
-        <div className="bg-violet-900/40 border border-violet-800 rounded-lg p-4 flex items-center">
-          <div className="bg-violet-900/40 p-3 rounded-full mr-4">
-            <IconMoon className="w-6 h-6 text-violet-200" />
+        <div className="bg-sky-900/40 border border-sky-800 rounded-lg p-4 flex items-center">
+          <div className="bg-sky-900/40 p-3 rounded-full mr-4">
+            <IconMoon className="w-6 h-6 text-sky-200" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-violet-100">Sleep Time</h3>
-            <p className="text-sm text-violet-200">
+            <h3 className="font-medium text-sky-100">Sleep Time</h3>
+            <p className="text-sm text-sky-200">
               Started at {formatTime(startedAt)}
               {endedAt 
                 ? ` - Ended at ${formatTime(endedAt)}` 
@@ -47,10 +47,10 @@ export default function SleepLog({
             </p>
           </div>
           <div className="flex items-center">
-            <div className="p-1 bg-violet-900/40 rounded-full">
-              <IconEdit className="w-5 h-5 text-violet-200" />
+            <div className="p-1 bg-sky-900/40 rounded-full">
+              <IconEdit className="w-5 h-5 text-sky-200" />
             </div>
-            <IconClock className="w-5 h-5 text-violet-200 ml-4" />
+            <IconClock className="w-5 h-5 text-sky-200 ml-4" />
           </div>
         </div>
       </button>

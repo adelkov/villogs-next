@@ -68,8 +68,8 @@ export default function EditSleepDialog({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 max-w-sm w-full mx-4">
         <div className="flex items-center gap-3 mb-6">
-          <div className="bg-violet-900/40 p-2 rounded-full">
-            <IconMoon className="w-5 h-5 text-violet-200" />
+          <div className="bg-sky-900/40 p-2 rounded-full">
+            <IconMoon className="w-5 h-5 text-sky-200" />
           </div>
           <h2 className="text-lg font-medium text-gray-100">Edit Sleep Time</h2>
         </div>
@@ -105,7 +105,7 @@ export default function EditSleepDialog({
         <div className="flex gap-4">
           <button
             onClick={handleSave}
-            className="flex-1 bg-violet-600 hover:bg-violet-700 text-white py-2 rounded-lg transition-colors"
+            className="flex-1 bg-sky-500 hover:bg-sky-600 text-white py-2 rounded-lg transition-colors"
           >
             Save Changes
           </button>

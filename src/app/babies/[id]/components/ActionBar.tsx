@@ -77,7 +77,7 @@ function StatusBar({
     <div className={`
       mb-4 p-4 rounded-lg
       ${activeSleep 
-        ? 'bg-violet-900/20 border border-violet-800' 
+        ? 'bg-sky-900/20 border border-sky-800' 
         : 'bg-gray-900 border border-gray-800'
       }
     `}>
@@ -85,7 +85,7 @@ function StatusBar({
         <div className="flex items-center gap-2">
           <div className={`
             w-3 h-3 rounded-full animate-pulse
-            ${activeSleep ? 'bg-violet-400' : 'bg-gray-400'}
+            ${activeSleep ? 'bg-sky-400' : 'bg-gray-400'}
           `} />
           <span className="font-medium text-lg text-gray-100">
             {activeSleep ? 'Baby is sleeping' : 'Baby is awake'}
@@ -169,16 +169,16 @@ export default function ActionBar({
           onClick={handleSleepClick}
           disabled={isPending}
           className={`
-            bg-gray-900 border border-violet-800 rounded-lg p-4 
+            bg-gray-900 border border-sky-800 rounded-lg p-4 
             flex flex-col items-center w-full
             hover:bg-gray-800 transition-colors
             ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >
-          <div className="bg-violet-900/40 p-3 rounded-full mb-2">
-            <IconMoon className="w-6 h-6 text-violet-200" />
+          <div className="bg-sky-900/40 p-3 rounded-full mb-2">
+            <IconMoon className="w-6 h-6 text-sky-200" />
           </div>
-          <h3 className="font-medium text-violet-100">End Sleep</h3>
+          <h3 className="font-medium text-sky-100">End Sleep</h3>
         </button>
       )
     }
@@ -190,16 +190,16 @@ export default function ActionBar({
           onClick={handleFeedClick}
           disabled={isPending}
           className={`
-            bg-gray-900 border border-pink-900 rounded-lg p-4 
+            bg-gray-900 border border-pink-400/50 rounded-lg p-4 
             flex flex-col items-center w-full
             hover:bg-gray-800 transition-colors
             ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >
-          <div className="bg-pink-900/40 p-3 rounded-full mb-2">
+          <div className="bg-pink-400/20 p-3 rounded-full mb-2">
             <IconMilk className="w-6 h-6 text-pink-300" />
           </div>
-          <h3 className="font-medium text-pink-100">End Feed</h3>
+          <h3 className="font-medium text-pink-300">End Feed</h3>
         </button>
       )
     }
@@ -211,48 +211,48 @@ export default function ActionBar({
           onClick={handleSleepClick}
           disabled={isPending}
           className={`
-            bg-gray-900 border border-violet-800 rounded-lg p-4 
+            bg-gray-900 border border-sky-800 rounded-lg p-4 
             flex flex-col items-center flex-1
             hover:bg-gray-800 transition-colors min-w-[120px]
             ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >
-          <div className="bg-violet-900/40 p-3 rounded-full mb-2">
-            <IconMoon className="w-6 h-6 text-violet-200" />
+          <div className="bg-sky-900/40 p-3 rounded-full mb-2">
+            <IconMoon className="w-6 h-6 text-sky-200" />
           </div>
-          <h3 className="font-medium text-violet-100">Sleep</h3>
+          <h3 className="font-medium text-sky-100">Sleep</h3>
         </button>
 
         <button 
           onClick={handleFeedClick}
           disabled={isPending}
           className={`
-            bg-gray-900 border border-pink-900 rounded-lg p-4 
+            bg-gray-900 border border-pink-400/50 rounded-lg p-4 
             flex flex-col items-center flex-1
             hover:bg-gray-800 transition-colors min-w-[120px]
             ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >
-          <div className="bg-pink-900/40 p-3 rounded-full mb-2">
+          <div className="bg-pink-400/20 p-3 rounded-full mb-2">
             <IconMilk className="w-6 h-6 text-pink-300" />
           </div>
-          <h3 className="font-medium text-pink-100">Feed</h3>
+          <h3 className="font-medium text-pink-300">Feed</h3>
         </button>
 
         <button 
           onClick={handleDiaperClick}
           disabled={isPending}
           className={`
-            bg-gray-900 border border-green-900 rounded-lg p-4 
+            bg-gray-900 border border-amber-300/50 rounded-lg p-4 
             flex flex-col items-center flex-1
             hover:bg-gray-800 transition-colors min-w-[120px]
             ${isPending ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
           `}
         >
-          <div className="bg-green-900/40 p-3 rounded-full mb-2">
-            <IconDroplet className="w-6 h-6 text-green-300" />
+          <div className="bg-amber-300/20 p-3 rounded-full mb-2">
+            <IconDroplet className="w-6 h-6 text-amber-200" />
           </div>
-          <h3 className="font-medium text-green-100">Diaper</h3>
+          <h3 className="font-medium text-amber-200">Diaper</h3>
         </button>
       </>
     )

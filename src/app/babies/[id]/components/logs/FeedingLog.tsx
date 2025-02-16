@@ -34,15 +34,15 @@ export default function FeedingLog({
         onClick={() => setShowEditDialog(true)}
         className="w-full text-left"
       >
-        <div className="bg-pink-900/40 border border-pink-900 rounded-lg p-4 flex items-center">
-          <div className="bg-pink-900/40 p-3 rounded-full mr-4">
-            <IconMilk className="w-6 h-6 text-pink-200" />
+        <div className="bg-pink-400/20 border border-pink-400/50 rounded-lg p-4 flex items-center">
+          <div className="bg-pink-400/20 p-3 rounded-full mr-4">
+            <IconMilk className="w-6 h-6 text-pink-300" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-pink-100">
+            <h3 className="font-medium text-pink-300">
               Breastfeeding - {side} side
             </h3>
-            <p className="text-sm text-pink-200">
+            <p className="text-sm text-pink-300/80">
               Started at {formatTime(startedAt)}
               {endedAt 
                 ? ` - Ended at ${formatTime(endedAt)}` 
@@ -51,10 +51,10 @@ export default function FeedingLog({
             </p>
           </div>
           <div className="flex items-center">
-            <div className="p-1 bg-pink-900/40 rounded-full">
-              <IconEdit className="w-5 h-5 text-pink-200" />
+            <div className="p-1 bg-pink-400/20 rounded-full">
+              <IconEdit className="w-5 h-5 text-pink-300" />
             </div>
-            <IconClock className="w-5 h-5 text-pink-200 ml-4" />
+            <IconClock className="w-5 h-5 text-pink-300 ml-4" />
           </div>
         </div>
       </button>

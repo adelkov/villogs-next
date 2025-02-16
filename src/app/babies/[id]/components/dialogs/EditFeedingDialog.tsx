@@ -65,8 +65,8 @@ export default function EditFeedingDialog({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 max-w-sm w-full mx-4">
         <div className="flex items-center gap-3 mb-6">
-          <div className="bg-pink-900/40 p-2 rounded-full">
-            <IconMilk className="w-5 h-5 text-pink-200" />
+          <div className="bg-pink-400/20 p-2 rounded-full">
+            <IconMilk className="w-5 h-5 text-pink-300" />
           </div>
           <h2 className="text-lg font-medium text-gray-100">Edit Feeding</h2>
         </div>
@@ -110,7 +110,7 @@ export default function EditFeedingDialog({
                   className={`
                     p-2 rounded-lg border transition-colors
                     ${newSide === side 
-                      ? 'bg-pink-900/40 border-pink-700 text-pink-100' 
+                      ? 'bg-pink-400/20 border-pink-400/50 text-pink-300' 
                       : 'bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700'
                     }
                   `}
@@ -125,7 +125,7 @@ export default function EditFeedingDialog({
         <div className="flex gap-4">
           <button
             onClick={handleSave}
-            className="flex-1 bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg transition-colors"
+            className="flex-1 bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg transition-colors"
           >
             Save Changes
           </button>

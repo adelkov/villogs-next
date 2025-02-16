@@ -61,8 +61,8 @@ export default function EditDiaperDialog({
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 max-w-sm w-full mx-4">
         <div className="flex items-center gap-3 mb-6">
-          <div className="bg-green-900/40 p-2 rounded-full">
-            <IconDroplet className="w-5 h-5 text-green-200" />
+          <div className="bg-amber-300/20 p-2 rounded-full">
+            <IconDroplet className="w-5 h-5 text-amber-200" />
           </div>
           <h2 className="text-lg font-medium text-gray-100">Edit Diaper Change</h2>
         </div>
@@ -93,7 +93,7 @@ export default function EditDiaperDialog({
                   className={`
                     p-2 rounded-lg border transition-colors
                     ${newType === type 
-                      ? 'bg-green-900/40 border-green-700 text-green-100' 
+                      ? 'bg-amber-300/20 border-amber-300/50 text-amber-200' 
                       : 'bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700'
                     }
                   `}
@@ -108,7 +108,7 @@ export default function EditDiaperDialog({
         <div className="flex gap-4">
           <button
             onClick={handleSave}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors"
+            className="flex-1 bg-amber-400 hover:bg-amber-500 text-white py-2 rounded-lg transition-colors"
           >
             Save Changes
           </button>
