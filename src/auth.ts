@@ -2,16 +2,17 @@ import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { compare } from 'bcryptjs'
 import { prisma } from '@/lib/prisma'
+import type { NextAuthConfig } from 'next-auth'
 
-export const { auth, signIn, signOut } = NextAuth({
+export const authConfig = {
   providers: [
     CredentialsProvider({
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" }
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+      async authorize(credentials: Partial<Record<"email" | "password", unknown>>) {
+        if (!credentials?.email || !credentials?.password || typeof credentials.email !== 'string' || typeof credentials.password !== 'string') {
           return null
         }
 
@@ -40,6 +41,7 @@ export const { auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: '/login'
   }
-})
+} satisfies NextAuthConfig
 
+export const { auth, signIn, signOut } = NextAuth(authConfig)
 export const runtime = 'nodejs' 
