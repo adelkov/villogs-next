@@ -1,5 +1,5 @@
 import type { sleep_logs } from '@prisma/client'
-import { getDate, isBefore, startOfDay } from 'date-fns'
+import { isBefore, startOfDay } from 'date-fns'
 
 type SleepLog = Omit<sleep_logs, 'id' | 'baby_id'> & {
   id: string
