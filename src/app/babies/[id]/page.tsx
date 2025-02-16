@@ -46,7 +46,7 @@ async function getBaby(id: string): Promise<BabyWithLogs> {
             { ended_at: null }
           ]
         },
-        orderBy: { started_at: 'desc' }
+        orderBy: { started_at: 'desc' },
       },
       diaper_change_logs: {
         where: {

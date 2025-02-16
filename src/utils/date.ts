@@ -1,4 +1,5 @@
-import { format, parseISO } from 'date-fns'
+import { format, parseISO, startOfDay } from 'date-fns'
+import { toZonedTime } from 'date-fns-tz'
 
 export function formatTime(dateStr: string) {
   return format(parseISO(dateStr), 'HH:mm')
@@ -16,10 +17,13 @@ export function getElapsedTime(fromTime: string): string {
   return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
 }
 
-export function getStartOfDay() {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-  return today
+export function getStartOfDay(date: Date = new Date()) {
+  // Get user's timezone
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  
+  // Convert to user's timezone and get start of day
+  const zonedDate = toZonedTime(date, timeZone)
+  return startOfDay(zonedDate)
 }
 
 export function getElapsedTimeInMinSec(dateStr: string): string {
