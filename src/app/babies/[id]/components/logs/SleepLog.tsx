@@ -24,7 +24,7 @@ export default function SleepLog({
 
   return (
     <>
-      <div className="bg-gray-900 border border-violet-800 rounded-lg p-4 flex items-center group">
+      <div className="bg-violet-900/40 border border-violet-800 rounded-lg p-4 flex items-center group">
         <div className="bg-violet-900/40 p-3 rounded-full mr-4">
           <IconMoon className="w-6 h-6 text-violet-200" />
         </div>

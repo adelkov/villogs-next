@@ -19,7 +19,7 @@ export default function FeedingLog({
   onDelete 
 }: FeedingLogProps) {
   return (
-    <div className="bg-gray-900 border border-pink-900 rounded-lg p-4 flex items-center group">
+    <div className="bg-pink-900/40 border border-pink-900 rounded-lg p-4 flex items-center group">
       <div className="bg-pink-900/40 p-3 rounded-full mr-4">
         <IconMilk className="w-6 h-6 text-pink-200" />
       </div>
