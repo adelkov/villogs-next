@@ -40,7 +40,7 @@ export default function FeedingLog({
           </div>
           <div className="flex-1">
             <h3 className="font-medium text-pink-300">
-              Breastfeeding - {side} side
+              Feeding - {side} side
             </h3>
             <p className="text-sm text-pink-300/80">
               Started at {formatTime(startedAt)}

@@ -38,7 +38,7 @@ export default function DiaperLog({
           </div>
           <div className="flex-1">
             <h3 className="font-medium text-amber-200">
-              Diaper Change - {type}
+              Diaper - {type}
             </h3>
             <p className="text-sm text-amber-200/80">
               At {formatTime(startedAt)}
