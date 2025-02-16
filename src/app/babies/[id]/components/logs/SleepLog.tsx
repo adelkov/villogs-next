@@ -28,31 +28,32 @@ export default function SleepLog({
 
   return (
     <>
-      <div className="bg-violet-900/40 border border-violet-800 rounded-lg p-4 flex items-center group">
-        <div className="bg-violet-900/40 p-3 rounded-full mr-4">
-          <IconMoon className="w-6 h-6 text-violet-200" />
+      <button 
+        onClick={() => setShowEditDialog(true)}
+        className="w-full text-left"
+      >
+        <div className="bg-violet-900/40 border border-violet-800 rounded-lg p-4 flex items-center">
+          <div className="bg-violet-900/40 p-3 rounded-full mr-4">
+            <IconMoon className="w-6 h-6 text-violet-200" />
+          </div>
+          <div className="flex-1">
+            <h3 className="font-medium text-violet-100">Sleep Time</h3>
+            <p className="text-sm text-violet-200">
+              Started at {formatTime(startedAt)}
+              {endedAt 
+                ? ` - Ended at ${formatTime(endedAt)}` 
+                : ' (Still sleeping)'
+              }
+            </p>
+          </div>
+          <div className="flex items-center">
+            <div className="p-1 bg-violet-900/40 rounded-full">
+              <IconEdit className="w-5 h-5 text-violet-200" />
+            </div>
+            <IconClock className="w-5 h-5 text-violet-200 ml-4" />
+          </div>
         </div>
-        <div className="flex-1">
-          <h3 className="font-medium text-violet-100">Sleep Time</h3>
-          <p className="text-sm text-violet-200">
-            Started at {formatTime(startedAt)}
-            {endedAt 
-              ? ` - Ended at ${formatTime(endedAt)}` 
-              : ' (Still sleeping)'
-            }
-          </p>
-        </div>
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button 
-            onClick={() => setShowEditDialog(true)}
-            className="p-1 hover:bg-gray-800 rounded-full transition-colors"
-          >
-            <IconEdit className="w-5 h-5
-             text-violet-200" />
-          </button>
-        </div>
-        <IconClock className="w-5 h-5 text-violet-200 ml-4" />
-      </div>
+      </button>
 
       {showEditDialog && (
         <EditSleepDialog
