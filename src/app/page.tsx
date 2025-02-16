@@ -1,64 +1,53 @@
-import Image from "next/image";
-import Link from "next/link";
+import Link from "next/link"
+import { IconPlus } from '@tabler/icons-react'
+import { prisma } from '@/lib/prisma'
+import { convertBigIntsToStrings } from '@/utils/prisma'
 
-// Add this interface at the top of the file
-interface Baby {
-  id: string;  // Now a string since we converted it in the API
-  name: string;
-  date_of_birth: string;
-}
 
 async function getBabies() {
-  // Get the base URL from environment or default to localhost in development
-  const baseUrl = process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
-    : process.env.NODE_ENV === 'development' 
-      ? 'http://localhost:3000'
-      : '';
-
-  const res = await fetch(`${baseUrl}/api/babies`, { 
-    cache: 'no-store',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  const babies = await prisma.babies.findMany({
+    orderBy: { created_at: 'desc' }
   })
   
-  if (!res.ok) {
-    throw new Error(`Failed to fetch babies: ${res.statusText}`)
-  }
-  
-  return res.json()
+  return convertBigIntsToStrings(babies)
 }
 
 export default async function Home() {
-  const babies = await getBabies() as Baby[]
+  const babies = await getBabies()
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start w-full max-w-2xl">
-        <h1 className="text-2xl font-bold">Baby Activity Monitor</h1>
-        
-        <div className="w-full">
-          <h2 className="text-xl mb-4">Registered Babies</h2>
-          {babies.length === 0 ? (
-            <p className="text-gray-500">No babies registered yet.</p>
-          ) : (
-            <ul className="space-y-4">
-              {babies.map((baby: Baby) => (
-                <Link 
-                  href={`/babies/${baby.id}`} 
-                  key={baby.id}
-                >
-                  <li className="border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors cursor-pointer">
-                    <h3 className="font-semibold">{baby.name}</h3>
-                    <p className="text-sm text-gray-500">Born: {baby.date_of_birth}</p>
-                  </li>
-                </Link>
-              ))}
-            </ul>
-          )}
+    <div className="min-h-screen bg-gray-950 p-8">
+      <div className="max-w-2xl mx-auto">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold mb-2 text-gray-100">Baby Tracker</h1>
+          <p className="text-gray-400">Track your baby&apos;s daily activities</p>
+        </header>
+
+        <div className="grid gap-4">
+          {babies.map(baby => (
+            <Link 
+              key={baby.id}
+              href={`/babies/${baby.id}`}
+              className="bg-gray-900 border border-gray-800 rounded-lg p-4 
+                hover:bg-gray-800 transition-colors group"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-lg font-medium text-gray-100 group-hover:text-white">
+                    {baby.name || 'Unnamed Baby'}
+                  </h2>
+                  <p className="text-sm text-gray-400 group-hover:text-gray-300">
+                    Click to view activities
+                  </p>
+                </div>
+                <div className="bg-gray-800 p-2 rounded-full group-hover:bg-gray-700">
+                  <IconPlus className="w-5 h-5 text-gray-400 group-hover:text-gray-300" />
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
-      </main>
+      </div>
     </div>
   )
 }
