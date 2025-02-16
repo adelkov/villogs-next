@@ -2,6 +2,7 @@
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { withAuth } from '@/lib/auth'
+import type { diaper_change_logs_type } from '@prisma/client'
 
 export const toggleSleep = withAuth(async (session, babyId: string) => {
   const ongoingSleep = await prisma.sleep_logs.findFirst({
@@ -76,38 +77,72 @@ interface EditLogData {
   startedAt?: string
   endedAt?: string | null
   side?: 'left' | 'right'
-  type?: string
+  type?: diaper_change_logs_type
+}
+
+// Handle each table type separately
+async function deleteFromTable(type: LogType, id: string) {
+  switch (type) {
+    case 'sleep':
+      return prisma.sleep_logs.delete({
+        where: { id: BigInt(id) }
+      })
+    case 'feed':
+      return prisma.breast_feed_logs.delete({
+        where: { id: BigInt(id) }
+      })
+    case 'diaper':
+      return prisma.diaper_change_logs.delete({
+        where: { id: BigInt(id) }
+      })
+    default:
+      throw new Error('Invalid log type')
+  }
+}
+
+async function updateTable(type: LogType, id: string, data: EditLogData) {
+  switch (type) {
+    case 'sleep':
+      return prisma.sleep_logs.update({
+        where: { id: BigInt(id) },
+        data: {
+          ...(data.startedAt && { started_at: data.startedAt }),
+          ...(data.endedAt !== undefined && { ended_at: data.endedAt })
+        }
+      })
+    case 'feed':
+      return prisma.breast_feed_logs.update({
+        where: { id: BigInt(id) },
+        data: {
+          ...(data.startedAt && { started_at: data.startedAt }),
+          ...(data.endedAt !== undefined && { ended_at: data.endedAt }),
+          ...(data.side && { side: data.side })
+        }
+      })
+    case 'diaper':
+      return prisma.diaper_change_logs.update({
+        where: { id: BigInt(id) },
+        data: {
+          ...(data.startedAt && { started_at: data.startedAt }),
+          ...(data.type && { type: data.type as diaper_change_logs_type })
+        }
+      })
+    default:
+      throw new Error('Invalid log type')
+  }
 }
 
 export const deleteLog = withAuth(async (session, id: string, type: LogType) => {
-  const table = {
-    sleep: 'sleep_logs',
-    feed: 'breast_feed_logs',
-    diaper: 'diaper_change_logs'
-  }[type]
-
-  await prisma[table].delete({
-    where: { id: BigInt(id) }
+  await prisma.$transaction(async () => {
+    await deleteFromTable(type, id)
   })
 
   revalidatePath('/babies/[id]')
 })
 
 export const editLog = withAuth(async (session, id: string, type: LogType, data: EditLogData) => {
-  const table = {
-    sleep: 'sleep_logs',
-    feed: 'breast_feed_logs',
-    diaper: 'diaper_change_logs'
-  }[type]
-
-  await prisma[table].update({
-    where: { id: BigInt(id) },
-    data: {
-      ...(data.startedAt && { started_at: data.startedAt }),
-      ...(data.endedAt !== undefined && { ended_at: data.endedAt }),
-      ...(data.side && { side: data.side }),
-      ...(data.type && { type: data.type })
-    }
+  await prisma.$transaction(async () => {
+    await updateTable(type, id, data)
   })
 
   revalidatePath('/babies/[id]')

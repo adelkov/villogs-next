@@ -1,3 +1,5 @@
+import type { breast_feed_logs, sleep_logs, diaper_change_logs } from '@prisma/client'
+
 export type ActivityType = 'feed' | 'sleep' | 'diaper'
 
 export interface TimelineActivity {
@@ -11,27 +13,32 @@ export interface TimelineActivity {
   }
 }
 
+type ConvertedLog<T> = Omit<T, 'id' | 'baby_id'> & {
+  id: string
+  baby_id: string
+}
+
 export function createTimeline(
-  feeds: any[],
-  sleeps: any[],
-  diapers: any[]
+  feedLogs: ConvertedLog<breast_feed_logs>[],
+  sleepLogs: ConvertedLog<sleep_logs>[],
+  diaperLogs: ConvertedLog<diaper_change_logs>[]
 ): TimelineActivity[] {
   const timeline: TimelineActivity[] = [
-    ...feeds.map(feed => ({
+    ...feedLogs.map(feed => ({
       id: feed.id,
       type: 'feed' as ActivityType,
       started_at: feed.started_at,
       ended_at: feed.ended_at,
       details: { side: feed.side }
     })),
-    ...sleeps.map(sleep => ({
+    ...sleepLogs.map(sleep => ({
       id: sleep.id,
       type: 'sleep' as ActivityType,
       started_at: sleep.started_at,
       ended_at: sleep.ended_at,
       details: {}
     })),
-    ...diapers.map(diaper => ({
+    ...diaperLogs.map(diaper => ({
       id: diaper.id,
       type: 'diaper' as ActivityType,
       started_at: diaper.started_at,

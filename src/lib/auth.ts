@@ -1,11 +1,12 @@
 import { auth } from '@/auth'
 import { redirect } from 'next/navigation'
+import type { Session } from 'next-auth'
 
-export type AuthenticatedAction<TArgs extends any[], TReturn> = (...args: TArgs) => Promise<TReturn>
+export type AuthenticatedAction<Args extends unknown[], Return> = (...args: Args) => Promise<Return>
 
-export function withAuth<TArgs extends any[], TReturn>(
-  action: (session: NonNullable<Awaited<ReturnType<typeof auth>>>, ...args: TArgs) => Promise<TReturn>
-): AuthenticatedAction<TArgs, TReturn> {
+export function withAuth<Args extends unknown[], Return>(
+  action: (session: Session, ...args: Args) => Promise<Return>
+): AuthenticatedAction<Args, Return> {
   return async (...args) => {
     const session = await auth()
     

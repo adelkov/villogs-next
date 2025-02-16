@@ -5,12 +5,12 @@ import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [error, setError] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    setError(null)
+    setErrorMessage(null)
     setIsLoading(true)
 
     const formData = new FormData(e.currentTarget)
@@ -25,14 +25,15 @@ export default function LoginPage() {
       })
 
       if (result?.error) {
-        setError('Invalid email or password')
+        setErrorMessage('Invalid email or password')
         return
       }
 
       router.push('/')
       router.refresh()
     } catch (error) {
-      setError('Something went wrong')
+      console.error(error)
+      setErrorMessage('Something went wrong')
     } finally {
       setIsLoading(false)
     }
@@ -47,9 +48,9 @@ export default function LoginPage() {
             <p className="text-gray-400 mt-1">Sign in to your account</p>
           </div>
 
-          {error && (
+          {errorMessage && (
             <div className="bg-red-500/10 border border-red-500/50 rounded p-3">
-              <p className="text-sm text-red-400">{error}</p>
+              <p className="text-sm text-red-400">{errorMessage}</p>
             </div>
           )}
 

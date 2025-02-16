@@ -1,43 +1,29 @@
+import type { Metadata } from 'next'
 import { prisma } from '@/lib/prisma'
 import { getStartOfDay } from '@/utils/date'
-import { convertBigIntsToStrings } from '@/utils/prisma'
 import { createTimeline } from '@/utils/timeline'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 import ActionBar from './components/ActionBar'
 import ActionBarSkeleton from './components/ActionBarSkeleton'
 import TimelineWrapper from './components/TimelineWrapper'
-import type { Prisma } from '@prisma/client'
+import type { breast_feed_logs, sleep_logs, diaper_change_logs } from '@prisma/client'
 
-// Define the return type of getBaby using Prisma's inferred types
-type BabyWithLogs = Prisma.babiesGetPayload<{
-  include: {
-    breast_feed_logs: true
-    sleep_logs: true
-    diaper_change_logs: true
-  }
-}>
-
-// Define the type after BigInt conversion
-type BabyWithStringIds = Omit<BabyWithLogs, 'id' | 'breast_feed_logs' | 'sleep_logs' | 'diaper_change_logs'> & {
+type ConvertedLog<T> = Omit<T, 'id' | 'baby_id'> & {
   id: string
-  breast_feed_logs: Array<Omit<BabyWithLogs['breast_feed_logs'][number], 'id' | 'baby_id'> & {
-    id: string
-    baby_id: string
-  }>
-  sleep_logs: Array<Omit<BabyWithLogs['sleep_logs'][number], 'id' | 'baby_id'> & {
-    id: string
-    baby_id: string
-  }>
-  diaper_change_logs: Array<Omit<BabyWithLogs['diaper_change_logs'][number], 'id' | 'baby_id'> & {
-    id: string
-    baby_id: string
-  }>
+  baby_id: string
 }
 
-async function getBaby(id: string): Promise<BabyWithStringIds> {
-  const today = getStartOfDay()
+interface BabyWithLogs {
+  id: string
+  name: string
+  breast_feed_logs: ConvertedLog<breast_feed_logs>[]
+  sleep_logs: ConvertedLog<sleep_logs>[]
+  diaper_change_logs: ConvertedLog<diaper_change_logs>[]
+}
 
+async function getBaby(id: string): Promise<BabyWithLogs> {
+  const today = getStartOfDay()
   const baby = await prisma.babies.findUnique({
     where: {
       id: BigInt(id)
@@ -76,16 +62,46 @@ async function getBaby(id: string): Promise<BabyWithStringIds> {
     notFound()
   }
 
-  return convertBigIntsToStrings(baby) as unknown as BabyWithStringIds
+  return {
+    id: baby.id.toString(),
+    name: baby.name,
+    breast_feed_logs: baby.breast_feed_logs.map(log => ({
+      ...log,
+      id: log.id.toString(),
+      baby_id: log.baby_id.toString()
+    })),
+    sleep_logs: baby.sleep_logs.map(log => ({
+      ...log,
+      id: log.id.toString(),
+      baby_id: log.baby_id.toString()
+    })),
+    diaper_change_logs: baby.diaper_change_logs.map(log => ({
+      ...log,
+      id: log.id.toString(),
+      baby_id: log.baby_id.toString()
+    }))
+  }
 }
 
-interface PageProps {
-  params: { id: string }
+type Props = {
+  params: Promise<{ id: string }>
 }
 
-export default async function BabyDashboard({ params }: PageProps) {
-  const id = await Promise.resolve(params.id)
-  const baby = await getBaby(id)
+export async function generateMetadata(
+  { params }: Props,
+): Promise<Metadata> {
+  const babyId = (await params).id
+  const baby = await getBaby(babyId)
+  
+  return {
+    title: `${baby.name}'s Activities`,
+    description: 'Track your baby\'s daily activities'
+  }
+}
+
+export default async function BabyDashboard({ params }: Props) {
+  const babyId = (await params).id
+  const baby = await getBaby(babyId)
   
   const activeSleep = baby.sleep_logs.find(log => !log.ended_at) || null
   const lastSleep = !activeSleep ? baby.sleep_logs[0] || null : null
@@ -106,7 +122,7 @@ export default async function BabyDashboard({ params }: PageProps) {
 
       <Suspense fallback={<ActionBarSkeleton />}>
         <ActionBar 
-          babyId={id}
+          babyId={baby.id}
           activeSleep={activeSleep}
           lastSleep={lastSleep}
           activeFeeding={activeFeeding}

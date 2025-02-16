@@ -1,4 +1,4 @@
-import { format, formatDistanceToNow, parseISO } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 
 export function formatTime(dateStr: string) {
   return format(parseISO(dateStr), 'HH:mm')

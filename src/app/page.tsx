@@ -9,8 +9,10 @@ async function getBabies() {
     orderBy: { created_at: 'desc' }
   })
   
-  return convertBigIntsToStrings(babies)
+  const convertedBabies = convertBigIntsToStrings(babies)
+  return convertedBabies
 }
+
 
 export default async function Home() {
   const babies = await getBabies()

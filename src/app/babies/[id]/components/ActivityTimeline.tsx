@@ -1,25 +1,25 @@
 'use client'
 import { TimelineActivity } from '@/utils/timeline'
+import { diaper_change_logs_type } from '@prisma/client'
+import DiaperLog from './logs/DiaperLog'
 import FeedingLog from './logs/FeedingLog'
 import SleepLog from './logs/SleepLog'
-import DiaperLog from './logs/DiaperLog'
+import { ActivityType, ActivityUpdateData } from './types'
 
 interface ActivityTimelineProps {
   activities: TimelineActivity[]
-  onEditActivity: <T extends 'sleep' | 'feed' | 'diaper'>(
-    id: string, 
-    type: T, 
-    updates: any
+  onEditActivity: <T extends ActivityType>(
+    id: string,
+    type: T,
+    updates: ActivityUpdateData<T>
   ) => void
-  onDeleteActivity: (id: string, type: 'sleep' | 'feed' | 'diaper') => void
-  isProcessing: boolean
+  onDeleteActivity: (id: string, type: ActivityType) => void
 }
 
 export default function ActivityTimeline({ 
   activities,
   onEditActivity,
-  onDeleteActivity,
-  isProcessing
+  onDeleteActivity
 }: ActivityTimelineProps) {
   if (activities.length === 0) {
     return (
@@ -70,7 +70,7 @@ export default function ActivityTimeline({
                 type={activity.details.diaperType!}
                 startedAt={activity.started_at}
                 onEdit={(id, startedAt, type) => 
-                  onEditActivity(id, 'diaper', { startedAt, type })
+                  onEditActivity(id, 'diaper', { startedAt, diaperType: type as diaper_change_logs_type })
                 }
                 onDelete={(id) => onDeleteActivity(id, 'diaper')}
               />

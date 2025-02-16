@@ -1,5 +1,5 @@
 'use client'
-import { IconDroplet, IconClock, IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconDroplet, IconClock, IconEdit } from '@tabler/icons-react'
 import { formatTime } from '@/utils/date'
 import { useState } from 'react'
 import EditDiaperDialog from '../dialogs/EditDiaperDialog'

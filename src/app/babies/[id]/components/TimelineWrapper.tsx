@@ -4,35 +4,39 @@ import { TimelineActivity } from '@/utils/timeline'
 import ActivityTimeline from './ActivityTimeline'
 import { deleteLog, editLog } from '../actions'
 import { useRouter } from 'next/navigation'
+import type { diaper_change_logs_type, breast_feed_logs_side } from '@prisma/client'
+import { ActivityType, ActivityUpdate } from './types'
 
-interface TimelineWrapperProps {
+interface Props {
   activities: TimelineActivity[]
 }
 
+// Define the edit data types to match ActivityTimeline's expectations
 type EditData = {
+  feed: {
+    startedAt: string
+    endedAt: string | null
+    side: breast_feed_logs_side
+  }
   sleep: {
     startedAt: string
     endedAt: string | null
   }
-  feed: {
-    startedAt: string
-    endedAt: string | null
-    side: 'left' | 'right'
-  }
   diaper: {
     startedAt: string
-    type: string
+    type: diaper_change_logs_type
   }
 }
 
-export default function TimelineWrapper({ activities }: TimelineWrapperProps) {
+
+export default function TimelineWrapper({ activities }: Props) {
   const router = useRouter()
   const [isProcessing, setIsProcessing] = useState(false)
 
-  const handleEditActivity = async <T extends keyof EditData>(
-    id: string, 
-    type: T, 
-    updates: Partial<EditData[T]>
+  const handleEditActivity = async (
+    id: string,
+    type: ActivityType,
+    updates: Omit<Extract<ActivityUpdate, { type: typeof type }>, 'id' | 'type'>
   ) => {
     if (isProcessing) return
     
@@ -47,7 +51,7 @@ export default function TimelineWrapper({ activities }: TimelineWrapperProps) {
     }
   }
 
-  const handleDeleteActivity = async (id: string, type: 'sleep' | 'feed' | 'diaper') => {
+  const handleDeleteActivity = async (id: string, type: keyof EditData) => {
     if (isProcessing) return
     
     try {
@@ -67,7 +71,6 @@ export default function TimelineWrapper({ activities }: TimelineWrapperProps) {
       activities={activities}
       onEditActivity={handleEditActivity}
       onDeleteActivity={handleDeleteActivity}
-      isProcessing={isProcessing}
     />
   )
 } 

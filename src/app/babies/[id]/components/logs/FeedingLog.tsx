@@ -1,5 +1,5 @@
 'use client'
-import { IconMilk, IconClock, IconEdit, IconTrash } from '@tabler/icons-react'
+import { IconMilk, IconClock, IconEdit } from '@tabler/icons-react'
 import { formatTime } from '@/utils/date'
 import { useState } from 'react'
 import EditFeedingDialog from '../dialogs/EditFeedingDialog'

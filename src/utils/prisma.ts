@@ -1,5 +1,3 @@
-import { Prisma } from '@prisma/client'
-
 export function convertBigIntsToStrings<T>(obj: T): T {
   if (obj === null || obj === undefined) {
     return obj
@@ -14,7 +12,7 @@ export function convertBigIntsToStrings<T>(obj: T): T {
   }
 
   if (typeof obj === 'object') {
-    const converted: Record<string, any> = {}
+    const converted: Record<string, unknown> = {}
     
     for (const [key, value] of Object.entries(obj)) {
       converted[key] = convertBigIntsToStrings(value)

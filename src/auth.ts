@@ -2,7 +2,7 @@ import NextAuth from 'next-auth'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import Credentials from 'next-auth/providers/credentials'
 import { prisma } from '@/lib/prisma'
-import bcrypt from 'bcryptjs'
+import bcryptjs from 'bcryptjs'
 import type { NextAuthConfig } from 'next-auth'
 
 export const config = {
@@ -21,7 +21,7 @@ export const config = {
 
         const user = await prisma.users.findUnique({
           where: {
-            email: credentials.email,
+            email: credentials.email as string,
           },
         })
 
@@ -29,9 +29,9 @@ export const config = {
           return null
         }
 
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password,
-          user.password!
+        const isPasswordValid = await bcryptjs.compare(
+          credentials.password as string,
+          user.password
         )
 
         if (!isPasswordValid) {
@@ -68,5 +68,6 @@ export const config = {
   },
 } satisfies NextAuthConfig
 
-export const { auth, handlers } = NextAuth(config)
-export const { GET, POST } = auth 
+export const runtime = 'nodejs'
+
+export const { auth, handlers: { GET, POST } } = NextAuth(config) 
