@@ -75,13 +75,13 @@ function StatusBar({
 
   return (
     <div className={`
-      mb-8 p-4 rounded-lg
+      mb-4 p-4 rounded-lg
       ${activeSleep 
         ? 'bg-violet-900/20 border border-violet-800' 
         : 'bg-gray-900 border border-gray-800'
       }
     `}>
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className={`
             w-3 h-3 rounded-full animate-pulse
@@ -266,7 +266,7 @@ export default function ActionBar({
         activeFeeding={activeFeeding}
       />
       
-      <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+      <div className="flex gap-2 mb-2 overflow-x-auto pb-2">
         {renderActionButtons()}
       </div>
 

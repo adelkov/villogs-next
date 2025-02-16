@@ -2,7 +2,7 @@ export default function ActionBarSkeleton() {
   return (
     <div>
       {/* Status Bar Skeleton */}
-      <div className="mb-8 p-4 rounded-lg flex items-center justify-between bg-gray-900 border border-gray-800 animate-pulse">
+      <div className="mb-2 p-4 rounded-lg flex items-center justify-between bg-gray-900 border border-gray-800 animate-pulse">
         <div className="flex items-center gap-3">
           <div className="w-3 h-3 rounded-full bg-gray-700" />
           <div className="h-6 w-32 bg-gray-700 rounded" />
@@ -11,7 +11,7 @@ export default function ActionBarSkeleton() {
       </div>
 
       {/* Action Buttons Skeleton */}
-      <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
+      <div className="flex gap-4 mb-2 overflow-x-auto pb-2">
         {[...Array(3)].map((_, i) => (
           <div 
             key={i}
