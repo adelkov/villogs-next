@@ -1,19 +1,12 @@
-import { notFound } from 'next/navigation'
-import { 
-  IconMilk, 
-  IconMoon, 
-  IconDroplet, 
-  IconClock 
-} from '@tabler/icons-react'
-import { format, parseISO } from 'date-fns'
-import { Suspense } from 'react'
 import { prisma } from '@/lib/prisma'
 import { getStartOfDay } from '@/utils/date'
 import { convertBigIntsToStrings } from '@/utils/prisma'
+import { createTimeline } from '@/utils/timeline'
+import { notFound } from 'next/navigation'
+import { Suspense } from 'react'
 import ActionBar from './components/ActionBar'
 import ActionBarSkeleton from './components/ActionBarSkeleton'
 import TimelineWrapper from './components/TimelineWrapper'
-import { createTimeline } from '@/utils/timeline'
 
 async function getBaby(id: string) {
   const today = getStartOfDay()
@@ -59,9 +52,6 @@ async function getBaby(id: string) {
   return convertBigIntsToStrings(baby)
 }
 
-function formatTime(dateStr: string) {
-  return format(parseISO(dateStr), 'HH:mm')
-}
 
 interface PageProps {
   params: { id: string }
@@ -71,22 +61,20 @@ export default async function BabyDashboard({ params }: PageProps) {
   const id = await Promise.resolve(params.id)
   const baby = await getBaby(id)
   
-  const convertedBaby = convertBigIntsToStrings(baby)
-
-  const activeSleep = convertedBaby.sleep_logs.find(log => !log.ended_at) || null
-  const lastSleep = !activeSleep ? convertedBaby.sleep_logs[0] || null : null
-  const activeFeeding = convertedBaby.breast_feed_logs.find(log => !log.ended_at) || null
+  const activeSleep = baby.sleep_logs.find(log => !log.ended_at) || null
+  const lastSleep = !activeSleep ? baby.sleep_logs[0] || null : null
+  const activeFeeding = baby.breast_feed_logs.find(log => !log.ended_at) || null
 
   const timeline = createTimeline(
-    convertedBaby.breast_feed_logs,
-    convertedBaby.sleep_logs,
-    convertedBaby.diaper_change_logs
+    baby.breast_feed_logs,
+    baby.sleep_logs,
+    baby.diaper_change_logs
   )
 
   return (
     <div className="p-8 bg-gray-950">
       <header className="mb-2">
-        <h1 className="text-3xl font-bold mb-2 text-gray-100">{convertedBaby.name}</h1>
+        <h1 className="text-3xl font-bold mb-2 text-gray-100">{baby.name}</h1>
         <p className="text-gray-400">Today&apos;s Activities</p>
       </header>
 
