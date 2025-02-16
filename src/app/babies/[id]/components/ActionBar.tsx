@@ -82,7 +82,7 @@ function StatusBar({
       }
     `}>
       <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <div className={`
             w-3 h-3 rounded-full animate-pulse
             ${activeSleep ? 'bg-violet-400' : 'bg-gray-400'}
@@ -101,7 +101,7 @@ function StatusBar({
 
       {activeFeeding && (
         <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-800">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full animate-pulse bg-pink-400" />
             <span className="font-medium text-gray-100">
               Feeding ({activeFeeding.side} side)
@@ -266,7 +266,7 @@ export default function ActionBar({
         activeFeeding={activeFeeding}
       />
       
-      <div className="flex gap-4 mb-8 overflow-x-auto pb-2">
+      <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
         {renderActionButtons()}
       </div>
 

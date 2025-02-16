@@ -25,10 +25,14 @@ export default function EditSleepDialog({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   const handleSave = () => {
+    // Convert the local datetime to ISO string
+    const formattedStartedAt = new Date(newStartedAt).toISOString()
+    const formattedEndedAt = newEndedAt ? new Date(newEndedAt).toISOString() : null
+
     onSave(
       id,
-      newStartedAt,
-      newEndedAt || null
+      formattedStartedAt,
+      formattedEndedAt
     )
   }
 

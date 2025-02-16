@@ -15,12 +15,16 @@ interface SleepLogProps {
 export default function SleepLog({ 
   id,
   startedAt, 
-
   endedAt,
   onEdit,
   onDelete 
 }: SleepLogProps) {
   const [showEditDialog, setShowEditDialog] = useState(false)
+
+  const handleSave = (id: string, newStartedAt: string, newEndedAt: string | null) => {
+    onEdit(id, newStartedAt, newEndedAt)
+    setShowEditDialog(false)
+  }
 
   return (
     <>
@@ -55,8 +59,11 @@ export default function SleepLog({
           id={id}
           startedAt={startedAt}
           endedAt={endedAt}
-          onSave={onEdit}
-          onDelete={onDelete}
+          onSave={handleSave}
+          onDelete={(id) => {
+            onDelete(id)
+            setShowEditDialog(false)
+          }}
           onCancel={() => setShowEditDialog(false)}
         />
       )}

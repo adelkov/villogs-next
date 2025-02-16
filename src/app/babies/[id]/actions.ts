@@ -67,4 +67,47 @@ export async function logDiaper(babyId: string, type: 'pee' | 'poop' | 'both' | 
   })
   
   revalidatePath(`/babies/${babyId}`)
+}
+
+type LogType = 'sleep' | 'feed' | 'diaper'
+
+interface EditLogData {
+  startedAt?: string
+  endedAt?: string | null
+  side?: 'left' | 'right'
+  type?: string
+}
+
+export async function deleteLog(id: string, type: LogType) {
+  const table = {
+    sleep: 'sleep_logs',
+    feed: 'breast_feed_logs',
+    diaper: 'diaper_change_logs'
+  }[type]
+
+  await prisma[table].delete({
+    where: { id: BigInt(id) }
+  })
+
+  revalidatePath('/babies/[id]')
+}
+
+export async function editLog(id: string, type: LogType, data: EditLogData) {
+  const table = {
+    sleep: 'sleep_logs',
+    feed: 'breast_feed_logs',
+    diaper: 'diaper_change_logs'
+  }[type]
+
+  await prisma[table].update({
+    where: { id: BigInt(id) },
+    data: {
+      ...(data.startedAt && { started_at: data.startedAt }),
+      ...(data.endedAt !== undefined && { ended_at: data.endedAt }),
+      ...(data.side && { side: data.side }),
+      ...(data.type && { type: data.type })
+    }
+  })
+
+  revalidatePath('/babies/[id]')
 } 

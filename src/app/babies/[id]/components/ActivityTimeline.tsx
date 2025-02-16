@@ -6,14 +6,20 @@ import DiaperLog from './logs/DiaperLog'
 
 interface ActivityTimelineProps {
   activities: TimelineActivity[]
-  onEditActivity: (id: string, type: string) => void
-  onDeleteActivity: (id: string, type: string) => void
+  onEditActivity: <T extends 'sleep' | 'feed' | 'diaper'>(
+    id: string, 
+    type: T, 
+    updates: any
+  ) => void
+  onDeleteActivity: (id: string, type: 'sleep' | 'feed' | 'diaper') => void
+  isProcessing: boolean
 }
 
 export default function ActivityTimeline({ 
   activities,
   onEditActivity,
-  onDeleteActivity
+  onDeleteActivity,
+  isProcessing
 }: ActivityTimelineProps) {
   if (activities.length === 0) {
     return (
@@ -24,7 +30,7 @@ export default function ActivityTimeline({
   }
 
   return (
-    <div className="grid gap-6">
+    <div className="grid gap-2">
       {activities.map(activity => {
         switch (activity.type) {
           case 'feed':
@@ -35,7 +41,7 @@ export default function ActivityTimeline({
                 side={activity.details.side!}
                 startedAt={activity.started_at}
                 endedAt={activity.ended_at}
-                onEdit={() => onEditActivity(activity.id, 'feed')}
+                onEdit={() => onEditActivity(activity.id, 'feed', {})}
                 onDelete={() => onDeleteActivity(activity.id, 'feed')}
               />
             )
@@ -47,8 +53,10 @@ export default function ActivityTimeline({
                 id={activity.id}
                 startedAt={activity.started_at}
                 endedAt={activity.ended_at}
-                onEdit={() => onEditActivity(activity.id, 'sleep')}
-                onDelete={() => onDeleteActivity(activity.id, 'sleep')}
+                onEdit={(id, startedAt, endedAt) => 
+                  onEditActivity(id, 'sleep', { startedAt, endedAt })
+                }
+                onDelete={(id) => onDeleteActivity(id, 'sleep')}
               />
             )
 
@@ -59,7 +67,7 @@ export default function ActivityTimeline({
                 id={activity.id}
                 type={activity.details.diaperType!}
                 startedAt={activity.started_at}
-                onEdit={() => onEditActivity(activity.id, 'diaper')}
+                onEdit={() => onEditActivity(activity.id, 'diaper', {})}
                 onDelete={() => onDeleteActivity(activity.id, 'diaper')}
               />
             )
