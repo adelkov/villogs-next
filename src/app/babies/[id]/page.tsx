@@ -100,19 +100,22 @@ export default async function BabyDashboard({ params }: PageProps) {
             key={feed.id}
             className="bg-gray-900 border border-pink-900 rounded-lg p-4 flex items-center"
           >
-            <div className="bg-pink-100 dark:bg-pink-900/40 p-3 rounded-full mr-4">
-              <IconMilk className="w-6 h-6 text-pink-500 dark:text-pink-300" />
+            <div className="bg-pink-900/40 p-3 rounded-full mr-4">
+              <IconMilk className="w-6 h-6 text-pink-200" />
             </div>
             <div className="flex-1">
-              <h3 className="font-medium text-pink-900 dark:text-pink-100">
+              <h3 className="font-medium text-pink-100">
                 Breastfeeding - {feed.side} side
               </h3>
-              <p className="text-sm text-pink-600 dark:text-pink-300">
+              <p className="text-sm text-pink-200">
                 Started at {formatTime(feed.started_at)}
-                {feed.ended_at ? ` - Ended at ${formatTime(feed.ended_at)}` : ' (Ongoing)'}
+                {feed.ended_at 
+                  ? ` - Ended at ${formatTime(feed.ended_at)}` 
+                  : ' (Ongoing)'
+                }
               </p>
             </div>
-            <IconClock className="w-5 h-5 text-pink-400 dark:text-pink-300" />
+            <IconClock className="w-5 h-5 text-pink-200" />
           </div>
         ))}
 
