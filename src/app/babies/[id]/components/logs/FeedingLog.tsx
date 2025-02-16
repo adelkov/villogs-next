@@ -38,18 +38,18 @@ export default function FeedingLog({
         onClick={() => setShowEditDialog(true)}
         className="w-full text-left"
       >
-        <div className="bg-pink-400/10 border border-pink-400/30 rounded-lg p-2 sm:p-4">
+        <div className="bg-gradient-to-br from-rose-300/95 to-rose-100/90 backdrop-blur-sm rounded-xl p-2 sm:p-4 hover:from-rose-300/100 hover:to-rose-100/95 transition-all">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-pink-400/20 p-2 rounded-full">
-                <IconMilk className="w-5 h-5 text-pink-300" />
+              <div className="bg-gray-950/10 p-2 rounded-full">
+                <IconMilk className="w-5 h-5 text-gray-950" />
               </div>
               <div>
-                <div className="text-sm text-pink-300/80">
+                <div className="text-sm text-gray-950/80">
                   {formattedStartTime}
                   {formattedEndTime && ` - ${formattedEndTime}`}
                 </div>
-                <div className="text-pink-300">
+                <div className="text-gray-950 font-medium">
                   Feeding ({side} side)
                 </div>
               </div>

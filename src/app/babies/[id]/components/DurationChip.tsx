@@ -18,19 +18,16 @@ export default function DurationChip({ startedAt, endedAt, variant }: Props) {
   const duration = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
   
   const bgColor = {
-    pink: 'bg-pink-400/20',
-    sky: 'bg-sky-900/40',
-    amber: 'bg-amber-400/20'
+    pink: 'bg-rose-200/90',
+    sky: 'bg-cyan-200/90',
+    amber: 'bg-orange-100/90'
   }[variant]
 
-  const textColor = {
-    pink: 'text-pink-300',
-    sky: 'text-sky-200',
-    amber: 'text-amber-200'
-  }[variant]
+  // Using the dark background color from the app
+  const textColor = 'text-gray-950'
   
   return (
-    <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs ${bgColor} ${textColor}`}>
+    <div className={`inline-flex items-center px-2.5 py-1.5 rounded-xl text-xs ${bgColor} ${textColor} font-medium backdrop-blur-sm`}>
       {duration}
     </div>
   )

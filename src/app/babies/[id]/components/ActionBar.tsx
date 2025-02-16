@@ -173,14 +173,15 @@ export default function ActionBar({
           <button 
             onClick={handleSleepClick}
             disabled={isPending}
-            className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
-              border border-sky-800 rounded-lg p-3 hover:bg-gray-800
-              disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex flex-col items-center justify-center w-full h-full 
+              bg-gray-900 border-2 border-cyan-300/50
+              rounded-xl p-3 hover:bg-gray-800/80
+              transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className="bg-sky-900/40 p-3 rounded-full">
-              <IconMoon className="w-6 h-6 text-sky-200" />
+            <div className="bg-cyan-300/10 p-3 rounded-full">
+              <IconMoon className="w-6 h-6 text-cyan-200" />
             </div>
-            <h3 className="font-medium text-sky-100 mt-2">End Sleep</h3>
+            <h3 className="font-medium text-cyan-200 mt-2">End Sleep</h3>
           </button>
         </div>
       )
@@ -192,14 +193,15 @@ export default function ActionBar({
           <button 
             onClick={handleFeedClick}
             disabled={isPending}
-            className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
-              border border-pink-400/50 rounded-lg p-3 hover:bg-gray-800
-              disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex flex-col items-center justify-center w-full h-full 
+              bg-gray-900 border-2 border-rose-300/50
+              rounded-xl p-3 hover:bg-gray-800/80
+              transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <div className="bg-pink-400/20 p-3 rounded-full">
-              <IconMilk className="w-6 h-6 text-pink-300" />
+            <div className="bg-rose-300/10 p-3 rounded-full">
+              <IconMilk className="w-6 h-6 text-rose-200" />
             </div>
-            <h3 className="font-medium text-pink-300 mt-2">End Feed</h3>
+            <h3 className="font-medium text-rose-200 mt-2">End Feed</h3>
           </button>
         </div>
       )
@@ -211,34 +213,37 @@ export default function ActionBar({
         <button 
           onClick={handleSleepClick}
           disabled={isPending}
-          className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
-            border border-gray-800 rounded-lg p-3 hover:bg-gray-800"
+          className="flex flex-col items-center justify-center w-full h-full 
+            bg-gray-900 border-2 border-cyan-300/50
+            rounded-xl p-3 hover:bg-gray-800/80 transition-all"
         >
-          <div className="bg-sky-900/40 p-3 rounded-full">
-            <IconMoon className="w-6 h-6 text-sky-200" />
+          <div className="bg-cyan-300/10 p-3 rounded-full">
+            <IconMoon className="w-6 h-6 text-cyan-200" />
           </div>
-          <h3 className="font-medium text-sky-100 mt-2">Sleep</h3>
+          <h3 className="font-medium text-cyan-200 mt-2">Sleep</h3>
         </button>
 
         <button 
           onClick={handleFeedClick}
           disabled={isPending}
-          className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
-            border border-gray-800 rounded-lg p-3 hover:bg-gray-800"
+          className="flex flex-col items-center justify-center w-full h-full 
+            bg-gray-900 border-2 border-rose-300/50
+            rounded-xl p-3 hover:bg-gray-800/80 transition-all"
         >
-          <div className="bg-pink-400/20 p-3 rounded-full">
-            <IconMilk className="w-6 h-6 text-pink-300" />
+          <div className="bg-rose-300/10 p-3 rounded-full">
+            <IconMilk className="w-6 h-6 text-rose-200" />
           </div>
-          <h3 className="font-medium text-pink-300 mt-2">Feed</h3>
+          <h3 className="font-medium text-rose-200 mt-2">Feed</h3>
         </button>
 
         <button 
           onClick={handleDiaperClick}
           disabled={isPending}
-          className="flex flex-col items-center justify-center w-full h-full bg-gray-900 
-            border border-gray-800 rounded-lg p-3 hover:bg-gray-800"
+          className="flex flex-col items-center justify-center w-full h-full 
+            bg-gray-900 border-2 border-amber-200/50
+            rounded-xl p-3 hover:bg-gray-800/80 transition-all"
         >
-          <div className="bg-amber-300/20 p-3 rounded-full">
+          <div className="bg-amber-200/10 p-3 rounded-full">
             <IconDroplet className="w-6 h-6 text-amber-200" />
           </div>
           <h3 className="font-medium text-amber-200 mt-2">Diaper</h3>

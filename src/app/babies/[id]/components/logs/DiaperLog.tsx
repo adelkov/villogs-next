@@ -26,17 +26,17 @@ export default function DiaperLog({ id, type, startedAt, onEdit, onDelete }: Dia
         onClick={() => setShowEditDialog(true)}
         className="w-full text-left"
       >
-        <div className="bg-amber-400/10 border border-amber-400/30 rounded-lg p-2 sm:p-4">
+        <div className="bg-gradient-to-br from-amber-200/95 to-amber-50/90 backdrop-blur-sm rounded-xl p-2 sm:p-4 hover:from-amber-200/100 hover:to-amber-50/95 transition-all">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-amber-400/20 p-2 rounded-full">
-                <IconDroplet className="w-5 h-5 text-amber-200" />
+              <div className="bg-gray-950/10 p-2 rounded-full">
+                <IconDroplet className="w-5 h-5 text-gray-950" />
               </div>
               <div>
-                <div className="text-sm text-amber-200/80">
+                <div className="text-sm text-gray-950/80">
                   {format(new Date(startedAt), 'HH:mm')}
                 </div>
-                <div className="text-amber-200">
+                <div className="text-gray-950 font-medium">
                   Diaper ({type})
                 </div>
               </div>
