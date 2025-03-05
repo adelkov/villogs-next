@@ -4,12 +4,10 @@ import { useState } from 'react'
 import { use } from 'react'
 import { 
   IconHome, 
-  IconMoon, 
-  IconBabyCarriage, 
-  IconDroplet,
   IconMenu2,
   IconX,
-  IconChartBar
+  IconChartBar,
+  IconList
 } from '@tabler/icons-react'
 
 interface LayoutProps {
@@ -64,20 +62,12 @@ export default function BabyLayout({ children, params }: LayoutProps) {
               Dashboard
             </Link>
             <Link 
-              href={`/babies/${id}/feeds`}
+              href={`/babies/${id}/sleep-logs`}
               className="flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors"
               onClick={() => setIsSidebarOpen(false)}
             >
-              <IconBabyCarriage className="w-5 h-5 mr-3" />
-              Feeding History
-            </Link>
-            <Link 
-              href={`/babies/${id}/sleep`}
-              className="flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <IconMoon className="w-5 h-5 mr-3" />
-              Sleep Tracking
+              <IconList className="w-5 h-5 mr-3" />
+              Sleep Logs
             </Link>
             <Link 
               href={`/babies/${id}/sleep-stats`}
@@ -86,14 +76,6 @@ export default function BabyLayout({ children, params }: LayoutProps) {
             >
               <IconChartBar className="w-5 h-5 mr-3" />
               Sleep Stats
-            </Link>
-            <Link 
-              href={`/babies/${id}/diapers`}
-              className="flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors"
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <IconDroplet className="w-5 h-5 mr-3" />
-              Diaper Changes
             </Link>
           </div>
         </nav>
