@@ -4,9 +4,10 @@ import { prisma } from '@/lib/prisma';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const session = await auth();
     
     // Check if user is authenticated
@@ -27,7 +28,7 @@ export async function GET(
     // Debug log
     console.log('Fetching sleep logs:', {
       userId,
-      babyId: params.id,
+      babyId: id,
       page,
       pageSize
     });
@@ -35,19 +36,19 @@ export async function GET(
     // Verify user has access to this baby
     const babyUser = await prisma.baby_user.findFirst({
       where: {
-        baby_id: BigInt(params.id),
+        baby_id: BigInt(id),
         user_id: BigInt(userId),
       },
     });
 
     if (!babyUser) {
-      console.log('No baby access found for:', { userId, babyId: params.id });
+      console.log('No baby access found for:', { userId, babyId: id });
       return NextResponse.json({ error: 'Unauthorized - No access to this baby' }, { status: 401 });
     }
 
     const sleepLogs = await prisma.sleep_logs.findMany({
       where: {
-        baby_id: BigInt(params.id),
+        baby_id: BigInt(id),
       },
       orderBy: {
         started_at: 'desc',
