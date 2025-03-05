@@ -5,12 +5,17 @@ import { useInView } from 'react-intersection-observer';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import SleepLog from '../components/logs/SleepLog';
+import { format, parseISO, isToday, isYesterday } from 'date-fns';
 
 interface SleepLogType {
   id: string;
   started_at: string;
   ended_at: string | null;
   created_at: string;
+}
+
+interface GroupedSleepLogs {
+  [key: string]: SleepLogType[];
 }
 
 export default function SleepLogsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -49,7 +54,7 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Important for sending cookies
+        credentials: 'include',
       });
       
       const data = await response.json();
@@ -78,15 +83,6 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
       fetchSleepLogs();
     }
   }, [inView, status, session]);
-
-  // Show loading state while session is being fetched
-  if (status === 'loading') {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
-  }
 
   const handleEdit = async (id: string, startedAt: string, endedAt: string | null) => {
     try {
@@ -132,8 +128,40 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
     }
   };
 
+  // Group sleep logs by date
+  const groupedLogs = sleepLogs.reduce<GroupedSleepLogs>((groups, log) => {
+    const date = parseISO(log.started_at);
+    const dateKey = format(date, 'yyyy-MM-dd');
+    
+    if (!groups[dateKey]) {
+      groups[dateKey] = [];
+    }
+    groups[dateKey].push(log);
+    return groups;
+  }, {});
+
+  // Format date for display
+  const formatDateHeading = (dateStr: string) => {
+    const date = parseISO(dateStr);
+    if (isToday(date)) {
+      return 'Today';
+    } else if (isYesterday(date)) {
+      return 'Yesterday';
+    }
+    return format(date, 'EEEE, MMMM d');
+  };
+
+  // Show loading state while session is being fetched
+  if (status === 'loading') {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg">Loading...</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-6">Sleep Logs</h1>
       
       {error && (
@@ -142,17 +170,30 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
         </div>
       )}
       
-      <div className="space-y-4">
-        {sleepLogs.map((log) => (
-          <SleepLog
-            key={log.id}
-            id={log.id}
-            startedAt={log.started_at}
-            endedAt={log.ended_at}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-          />
-        ))}
+      <div className="space-y-8">
+        {Object.entries(groupedLogs)
+          .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
+          .map(([date, logs]) => (
+            <div key={date} className="space-y-4">
+              <h2 className="text-xl font-semibold text-gray-300 border-b border-gray-800 pb-2">
+                {formatDateHeading(date)}
+              </h2>
+              <div className="space-y-4">
+                {logs
+                  .sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())
+                  .map((log) => (
+                    <SleepLog
+                      key={log.id}
+                      id={log.id}
+                      startedAt={log.started_at}
+                      endedAt={log.ended_at}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                    />
+                  ))}
+              </div>
+            </div>
+          ))}
         
         {loading && (
           <div className="text-center py-4">
