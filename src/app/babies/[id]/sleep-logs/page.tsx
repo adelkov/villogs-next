@@ -33,14 +33,6 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    // Debug session state
-    console.log('Session state:', {
-      status,
-      userId: session?.user?.id,
-      isAuthenticated: status === 'authenticated'
-    });
-  }, [session, status]);
 
   const fetchSleepLogs = async () => {
     if (loading || !hasMore || status !== 'authenticated' || !session?.user?.id) return;

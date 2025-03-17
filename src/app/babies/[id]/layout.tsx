@@ -2,12 +2,14 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import { use } from 'react'
+import { signOut } from 'next-auth/react'
 import { 
   IconHome, 
   IconMenu2,
   IconX,
   IconChartBar,
-  IconList
+  IconList,
+  IconLogout
 } from '@tabler/icons-react'
 
 interface LayoutProps {
@@ -77,6 +79,13 @@ export default function BabyLayout({ children, params }: LayoutProps) {
               <IconChartBar className="w-5 h-5 mr-3" />
               Sleep Stats
             </Link>
+            <button
+              onClick={() => signOut({ callbackUrl: '/login' })}
+              className="flex items-center w-full px-3 py-2 text-gray-300 hover:bg-gray-800 rounded-lg transition-colors"
+            >
+              <IconLogout className="w-5 h-5 mr-3" />
+              Logout
+            </button>
           </div>
         </nav>
       </aside>

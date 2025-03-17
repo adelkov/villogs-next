@@ -5,6 +5,8 @@ import type { NextRequest } from 'next/server'
 export async function middleware(request: NextRequest) {
   const session = await auth()
   const isLoginPage = request.nextUrl.pathname.startsWith('/login')
+  const isForgotPasswordPage = request.nextUrl.pathname.startsWith('/forgot-password')
+  const isResetPasswordPage = request.nextUrl.pathname.startsWith('/reset-password')
   const isAuthRoute = request.nextUrl.pathname.startsWith('/api/auth')
 
   // Allow auth routes to pass through
@@ -12,8 +14,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  // Redirect to login if no session (except for login page)
-  if (!session && !isLoginPage) {
+  // Allow access to login, forgot-password, and reset-password pages
+  if (isLoginPage || isForgotPasswordPage || isResetPasswordPage) {
+    return NextResponse.next()
+  }
+
+  // Redirect to login if no session
+  if (!session) {
     const loginUrl = new URL('/login', request.url)
     loginUrl.searchParams.set('callbackUrl', request.url)
     return NextResponse.redirect(loginUrl)
