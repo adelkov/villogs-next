@@ -33,14 +33,14 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
-  const fetchSleepLogs = async () => {
-    if (loading || !hasMore || status !== 'authenticated' || !session?.user?.id) return;
+  const fetchSleepLogs = async (reset: boolean = false) => {
+    if (loading || (!hasMore && !reset) || status !== 'authenticated' || !session?.user?.id) return;
     
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`/api/babies/${resolvedParams.id}/sleep-logs?page=${page}`, {
+      const currentPage = reset ? 1 : page;
+      const response = await fetch(`/api/babies/${resolvedParams.id}/sleep-logs?page=${currentPage}`, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -56,8 +56,9 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
       if (data.sleepLogs.length === 0) {
         setHasMore(false);
       } else {
-        setSleepLogs(prev => [...prev, ...data.sleepLogs]);
-        setPage(prev => prev + 1);
+        // If resetting, replace the logs instead of appending
+        setSleepLogs(prev => reset ? data.sleepLogs : [...prev, ...data.sleepLogs]);
+        setPage(prev => reset ? 2 : prev + 1);
       }
     } catch (error) {
       console.error('Error fetching sleep logs:', error);
@@ -70,9 +71,9 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
 
   useEffect(() => {
     if (status === 'authenticated' && session?.user?.id) {
-      fetchSleepLogs();
+      fetchSleepLogs(true); // Reset the logs when the component mounts
     }
-  }, [status, session]);
+  }, [status, session, resolvedParams.id]);
 
   const handleEdit = async (id: string, startedAt: string, endedAt: string | null) => {
     try {
@@ -164,7 +165,7 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
         {Object.entries(groupedLogs)
           .sort(([dateA], [dateB]) => dateB.localeCompare(dateA))
           .map(([date, logs]) => (
-            <div key={date} className="space-y-4">
+            <div key={`date-${date}`} className="space-y-4">
               <h2 className="text-xl font-semibold text-gray-300 border-b border-gray-800 pb-2">
                 {formatDateHeading(date)}
               </h2>
@@ -173,7 +174,7 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
                   .sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime())
                   .map((log) => (
                     <SleepLog
-                      key={log.id}
+                      key={`log-${log.id}-${log.started_at}`}
                       id={log.id}
                       startedAt={log.started_at}
                       endedAt={log.ended_at}
@@ -195,7 +196,7 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
       {hasMore && !loading && (
         <div className="text-center py-4">
           <button
-            onClick={fetchSleepLogs}
+            onClick={() => fetchSleepLogs(false)}
             className="bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2 px-4 rounded-lg transition-colors border border-gray-700"
           >
             Load More
