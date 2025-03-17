@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, use } from 'react';
-import { useInView } from 'react-intersection-observer';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import SleepLog from '../components/logs/SleepLog';
@@ -33,7 +32,6 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { ref, inView } = useInView();
 
   useEffect(() => {
     // Debug session state
@@ -79,10 +77,10 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
   };
 
   useEffect(() => {
-    if (inView && status === 'authenticated' && session?.user?.id) {
+    if (status === 'authenticated' && session?.user?.id) {
       fetchSleepLogs();
     }
-  }, [inView, status, session]);
+  }, [status, session]);
 
   const handleEdit = async (id: string, startedAt: string, endedAt: string | null) => {
     try {
@@ -194,15 +192,24 @@ export default function SleepLogsPage({ params }: { params: Promise<{ id: string
               </div>
             </div>
           ))}
-        
-        {loading && (
-          <div className="text-center py-4">
-            Loading more sleep logs...
-          </div>
-        )}
-        
-        <div ref={ref} className="h-10" />
       </div>
+      
+      {loading && (
+        <div className="text-center py-4">
+          Loading more sleep logs...
+        </div>
+      )}
+      
+      {hasMore && !loading && (
+        <div className="text-center py-4">
+          <button
+            onClick={fetchSleepLogs}
+            className="bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2 px-4 rounded-lg transition-colors border border-gray-700"
+          >
+            Load More
+          </button>
+        </div>
+      )}
       
       {!hasMore && sleepLogs.length > 0 && (
         <p className="text-center text-gray-600 mt-4">
