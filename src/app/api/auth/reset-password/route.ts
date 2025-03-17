@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if token is expired (1 hour)
-    const tokenAge = Date.now() - resetToken.created_at.getTime()
+    const tokenAge = Date.now() - (resetToken.created_at?.getTime() || 0)
     if (tokenAge > 3600000) { // 1 hour in milliseconds
       await prisma.password_reset_tokens.delete({
         where: { email: resetToken.email }
